@@ -1,182 +1,171 @@
-
-**`skills/rtl-vibe-ui/assets/tailwind-tokens.css`**
-```css
-/* ============================================================
-   RTL Vibe UI — Tailwind v4 Semantic Tokens
-   ------------------------------------------------------------
-   این فایل توکن‌های معنایی را برای پروژه‌های فارسی/عربی تعریف می‌کند.
-   کامپوننت‌ها باید فقط از کلاس‌های معنایی (bg-surface, text-on-surface,
-   border-border, ...) استفاده کنند — نه هگز خام و نه رنگ primitive.
-
-   سازگاری: Tailwind CSS v4.0+ (ویژگی‌های منطقی درون‌خطی در هسته).
-   برای محور بلوکی منطقی (mbs-*, pbe-*) نیازمند v4.2+ است.
-   ============================================================ */
+/* RTL Vibe UI | Semantic design tokens | Tailwind CSS v4
+ *
+ * This is a source stylesheet: import it through your Tailwind build pipeline.
+ * It does not load font files or force a global document direction.
+ *
+ * Themes: light by default, dark when data-theme="dark" is on an ancestor.
+ * Set <html lang="fa" dir="rtl"> or <html lang="ar" dir="rtl"> in markup;
+ * direction is not a design token or a color theme.
+ *
+ * Architecture: primitive (--pv-*) -> semantic (--ui-*) -> Tailwind utilities.
+ * Brand colors are defaults, not an RTL-language requirement.
+ */
 
 @import "tailwindcss";
 
-/* ------------------------------------------------------------
-   ۱) حالت تاریک — کلاس‌محور و data-attribute محور
-   ------------------------------------------------------------
-   به‌جای prefers-color-scheme، از [data-theme="dark"] استفاده می‌کنیم
-   تا کاربر بتواند دستی تم را تغییر دهد و اسکیل در هر دو حالت تست شود.
-   ------------------------------------------------------------ */
+/* Manual/theme-script selection; the OS preference needs explicit application
+ * by the host app if it wants system-first behavior. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* ------------------------------------------------------------
-   ۲) توکن‌های معنایی (Semantic Tokens)
-   ------------------------------------------------------------
-   این توکن‌ها با @theme inline تعریف می‌شوند تا مقادیرشان مستقیماً در
-   کلاس‌های تولیدشده inline شود و در زمان اجرا با override کردن
-   CSS custom properties قابل تغییر باشند.
-   ------------------------------------------------------------ */
-@theme inline {
-  /* ---------- Typography ---------- */
-  --font-sans: "Vazirmatn", "Vazir", "Geist", system-ui, -apple-system, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "JetBrains Mono", monospace;
-
-  /* ---------- Primitive Colors (فقط برای تعریف semantic استفاده شوند) ---------- */
-  --color-lajvard-400: #4F68E5;
-  --color-lajvard-600: #1C39BB;
-  --color-lajvard-700: #152D93;
-  --color-firouzeh-500: #2AA8A0;
-  --color-anar-600: #C62828;
-  --color-puste-500: #8BB174;
-
-  /* ---------- Semantic Surfaces ---------- */
-  --color-surface: var(--token-surface);
-  --color-surface-2: var(--token-surface-2);
-  --color-surface-3: var(--token-surface-3);
-
-  /* ---------- Semantic Text ---------- */
-  --color-on-surface: var(--token-on-surface);
-  --color-on-surface-muted: var(--token-on-surface-muted);
-
-  /* ---------- Semantic Borders ---------- */
-  --color-border: var(--token-border);
-
-  /* ---------- Semantic Brand ---------- */
-  --color-primary: var(--token-primary);
-  --color-on-primary: var(--token-on-primary);
-  --color-primary-soft: var(--token-primary-soft);
-
-  /* ---------- Semantic Feedback ---------- */
-  --color-success: var(--token-success);
-  --color-success-soft: var(--token-success-soft);
-  --color-danger: var(--token-danger);
-  --color-danger-soft: var(--token-danger-soft);
-  --color-warn: var(--token-warn);
-  --color-warn-soft: var(--token-warn-soft);
-
-  /* ---------- Accent (فیروزه‌ای) ---------- */
-  --color-accent: var(--color-firouzeh-500);
-  --color-accent-soft: rgba(42, 168, 160, 0.14);
-
-  /* ---------- Radius ---------- */
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
-}
-
-/* ------------------------------------------------------------
-   ۳) مقادیر حالت روشن (Light Mode Defaults)
-   ------------------------------------------------------------ */
 :root {
   color-scheme: light;
 
-  --token-surface: #F6F8FC;
-  --token-surface-2: #FFFFFF;
-  --token-surface-3: #EDF1F8;
+  /* Optional Persian-inspired brand primitives. */
+  --pv-lajvard-600: #1c39bb;
+  --pv-lajvard-400: #7d91ff;
+  --pv-firouzeh-500: #2aa8a0;
+  --pv-anar-600: #c62828;
+  --pv-pisteh-500: #8bb174;
+  --pv-zaferan-500: #daa520;
 
-  --token-on-surface: #0F172A;
-  --token-on-surface-muted: #64748B;
+  /* Semantic foundations; components should consume these, not primitives. */
+  --ui-canvas: #f6f8fc;
+  --ui-surface: #ffffff;
+  --ui-surface-raised: #f0f4fa;
+  --ui-text: #18253c;
+  --ui-text-muted: #485b75;
+  --ui-border: #c5d0df;
+  --ui-border-strong: #6e819c;
 
-  --token-border: #E2E8F0;
+  /* Paired foreground/background colors for interactive components. */
+  --ui-primary: var(--pv-lajvard-600);
+  --ui-on-primary: #ffffff;
+  --ui-primary-subtle: #e9edff;
+  --ui-accent: #086b66;
+  --ui-on-accent: #ffffff;
+  --ui-accent-subtle: #dff5f3;
+  --ui-danger: #aa2020;
+  --ui-on-danger: #ffffff;
+  --ui-danger-subtle: #ffebeb;
+  --ui-success: #326526;
+  --ui-on-success: #ffffff;
+  --ui-success-subtle: #edf6ea;
+  --ui-warning: #855100;
+  --ui-on-warning: #ffffff;
+  --ui-warning-subtle: #fff3df;
+  --ui-focus: #1c39bb;
 
-  --token-primary: var(--color-lajvard-600);
-  --token-on-primary: #FFFFFF;
-  --token-primary-soft: rgba(28, 57, 187, 0.08);
-
-  --token-success: #4D7A3A;
-  --token-success-soft: rgba(139, 177, 116, 0.16);
-
-  --token-danger: var(--color-anar-600);
-  --token-danger-soft: rgba(198, 40, 40, 0.10);
-
-  --token-warn: #B45309;
-  --token-warn-soft: rgba(245, 158, 11, 0.14);
+  /* Spacing and elevation roles; preserve the demo's restrained character. */
+  --ui-radius-control: 0.625rem;
+  --ui-radius-card: 0.875rem;
+  --ui-radius-dialog: 1.125rem;
+  --ui-shadow-raised: 0 0.375rem 1.5rem rgb(15 23 42 / 0.08);
 }
 
-/* ------------------------------------------------------------
-   ۴) مقادیر حالت تاریک (Dark Mode Overrides)
-   ------------------------------------------------------------
-   فقط توکن‌های معنایی را بازنویسی می‌کنیم — هیچ کامپوننتی تغییر نمی‌کند.
-   ------------------------------------------------------------ */
+/* Every semantic role used in light mode is explicitly considered in dark mode.
+ * On-colors are independently selected rather than inheriting white text. */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --token-surface: #0B1220;
-  --token-surface-2: #111A2E;
-  --token-surface-3: #17233D;
+  --ui-canvas: #0b1220;
+  --ui-surface: #111a2e;
+  --ui-surface-raised: #17233d;
+  --ui-text: #e6edf7;
+  --ui-text-muted: #b4c1d6;
+  --ui-border: #52627c;
+  --ui-border-strong: #8293af;
 
-  --token-on-surface: #E6EDF7;
-  --token-on-surface-muted: #93A2BD;
+  --ui-primary: #aab8ff;
+  --ui-on-primary: #111a2e;
+  --ui-primary-subtle: #24325a;
+  --ui-accent: #72d9d0;
+  --ui-on-accent: #0b2324;
+  --ui-accent-subtle: #123d44;
+  --ui-danger: #ff9999;
+  --ui-on-danger: #3f0b0b;
+  --ui-danger-subtle: #46242e;
+  --ui-success: #b2e6a4;
+  --ui-on-success: #15301b;
+  --ui-success-subtle: #223e33;
+  --ui-warning: #ffd48e;
+  --ui-on-warning: #38210f;
+  --ui-warning-subtle: #473923;
+  --ui-focus: #bad4ff;
 
-  --token-border: #223049;
-
-  --token-primary: var(--color-lajvard-400);
-  --token-on-primary: #FFFFFF;
-  --token-primary-soft: rgba(79, 104, 229, 0.14);
-
-  --token-success: #9DCB87;
-  --token-success-soft: rgba(139, 177, 116, 0.18);
-
-  --token-danger-soft: rgba(198, 40, 40, 0.18);
-
-  --token-warn: #F5B342;
-  --token-warn-soft: rgba(245, 158, 11, 0.16);
+  --ui-shadow-raised: 0 0.625rem 1.875rem rgb(0 0 0 / 0.35);
 }
 
-/* ------------------------------------------------------------
-   ۵) ابزارهای سفارشی تایپوگرافی RTL
-   ------------------------------------------------------------
-   @utility یک کلاس سفارشی می‌سازد که در همه variantها (hover:, md: و…)
-   قابل استفاده است.
-   ------------------------------------------------------------ */
+/* Semantic custom properties are resolved at use time, so a theme change can
+ * update the same utility class without rebuilding or duplicating components. */
+@theme inline {
+  --font-sans: "Vazirmatn", "Noto Sans Arabic", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", "Cascadia Code", ui-monospace, monospace;
 
-/* متن RTL با فرم‌های ترجیحی فارسی و letter-spacing صفر */
+  --color-canvas: var(--ui-canvas);
+  --color-surface: var(--ui-surface);
+  --color-surface-raised: var(--ui-surface-raised);
+  --color-on-surface: var(--ui-text);
+  --color-on-surface-muted: var(--ui-text-muted);
+  --color-ui-border: var(--ui-border);
+  --color-ui-border-strong: var(--ui-border-strong);
+  --color-primary: var(--ui-primary);
+  --color-on-primary: var(--ui-on-primary);
+  --color-primary-soft: var(--ui-primary-subtle);
+  --color-accent: var(--ui-accent);
+  --color-on-accent: var(--ui-on-accent);
+  --color-accent-soft: var(--ui-accent-subtle);
+  --color-danger: var(--ui-danger);
+  --color-on-danger: var(--ui-on-danger);
+  --color-danger-soft: var(--ui-danger-subtle);
+  --color-success: var(--ui-success);
+  --color-on-success: var(--ui-on-success);
+  --color-success-soft: var(--ui-success-subtle);
+  --color-warning: var(--ui-warning);
+  --color-on-warning: var(--ui-on-warning);
+  --color-warning-soft: var(--ui-warning-subtle);
+  --color-focus: var(--ui-focus);
+
+  /* Compatibility aliases for classes in earlier reference examples. */
+  --color-border: var(--ui-border);
+  --color-surface-2: var(--ui-surface-raised);
+  --color-surface-3: var(--ui-surface-raised);
+  --color-warn: var(--ui-warning);
+  --color-warn-soft: var(--ui-warning-subtle);
+
+  --radius-ui-control: var(--ui-radius-control);
+  --radius-ui-card: var(--ui-radius-card);
+  --radius-ui-dialog: var(--ui-radius-dialog);
+  --shadow-ui-raised: var(--ui-shadow-raised);
+}
+
+/* Utilities are opt-in; do not apply them globally to every text element. */
 @utility rtl-text {
-  font-feature-settings: "ss01";
-  letter-spacing: 0;
+  direction: rtl;
+  text-align: start;
+  letter-spacing: normal;
 }
 
-/* فیلدهای LTR (ایمیل، URL، تلفن، کد) */
+/* Pair this utility with dir="ltr" on the actual input where possible. */
 @utility ltr-field {
   direction: ltr;
-  text-align: left;
+  text-align: start;
   font-variant-numeric: tabular-nums;
 }
 
-/* ------------------------------------------------------------
-   ۶) پایه (Base Layer)
-   ------------------------------------------------------------
-   تنظیمات پیش‌فرض بدنه برای فارسی/عربی.
-   ------------------------------------------------------------ */
+/* A minimal neutral baseline; the host design system owns its components. */
 @layer base {
   html {
-    @apply font-sans;
-    font-feature-settings: "ss01";
-    letter-spacing: 0;
+    font-family: var(--font-sans);
   }
 
   body {
-    @apply bg-surface text-on-surface;
+    background: var(--ui-canvas);
+    color: var(--ui-text);
     line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* اعداد در متن RTL به‌صورت پیش‌فرض tabular می‌مانند */
-  .tabular-nums {
-    font-variant-numeric: tabular-nums;
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 2px solid var(--ui-focus);
+    outline-offset: 3px;
   }
 }
