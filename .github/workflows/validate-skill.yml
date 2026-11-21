@@ -19,7 +19,7 @@ jobs:
         run: pip install --quiet skills-ref
 
       - name: Validate skill structure
-        run: skills-ref validate ./skills/rtl-vibe-ui
+        run: agentskills validate ./skills/rtl-vibe-ui
 
       - name: Verify all reference files exist
         run: |
