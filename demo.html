@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>آرمان — دموی کامل rtl-vibe-ui</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ==========================================================================
+   ۱) توکن‌های معنایی (Semantic Tokens) - الهام گرفته از tailwind-tokens.css
+   ========================================================================== */
+:root {
+  color-scheme: light;
+  --font-sans: "Vazirmatn", "Vazir", system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+
+  /* پالت بومی (Primitives) */
+  --lajvard-400: #4F68E5;
+  --lajvard-600: #1C39BB;
+  --lajvard-700: #152D93;
+  --firouzeh-500: #2AA8A0;
+  --anar-600: #C62828;
+  --puste-500: #8BB174;
+  --kahgel-100: #F6F8FC;
+
+  /* Semantic - Light */
+  --surface: var(--kahgel-100);
+  --surface-2: #FFFFFF;
+  --surface-3: #EDF1F8;
+  --border: #E2E8F0;
+  --on-surface: #0F172A;
+  --on-surface-muted: #64748B;
+  --primary: var(--lajvard-600);
+  --on-primary: #FFFFFF;
+  --primary-soft: rgba(28, 57, 187, 0.08);
+  --accent: var(--firouzeh-500);
+  --danger: var(--anar-600);
+  --danger-soft: rgba(198, 40, 40, 0.10);
+  --success: #4D7A3A;
+  --success-soft: rgba(139, 177, 116, 0.16);
+  --warn: #B45309;
+  --warn-soft: rgba(245, 158, 11, 0.14);
+  
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 6px 22px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.15);
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+
+  /* متغیر جهت برای انیمیشن‌ها (RTL = -1) */
+  --flow-dir: -1; 
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --surface: #0B1220;
+  --surface-2: #111A2E;
+  --surface-3: #17233D;
+  --border: #223049;
+  --on-surface: #E6EDF7;
+  --on-surface-muted: #93A2BD;
+  --primary: var(--lajvard-400);
+  --primary-soft: rgba(79, 104, 229, 0.14);
+  --success: #9DCB87;
+  --danger-soft: rgba(198, 40, 40, 0.18);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+[dir="ltr"] {
+  --flow-dir: 1; /* LTR = 1 */
+}
+
+/* ==========================================================================
+   ۲) پایه - تایپوگرافی فارسی
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; min-block-size: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01";
+  letter-spacing: 0; /* ممنوعیت مطلق letter-spacing در فارسی */
+  line-height: 1.7;
+  background: var(--surface);
+  color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* آینه‌سازی آیکون‌های جهت‌دار در RTL */
+[dir="rtl"] .mirror-in-rtl { transform: scaleX(-1); }
+
+/* دسترس‌پذیری (Focus Ring) */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* احترام به prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   ۳) نوار دمو (فقط برای نمایش)
+   ========================================================================== */
+.demo-bar {
+  position: sticky; inset-block-start: 0; z-index: 50;
+  display: flex; align-items: center; gap: 12px;
+  padding-block: 10px; padding-inline: 20px;
+  background: var(--on-surface); color: var(--surface-2);
+  font-size: 13px; box-shadow: var(--shadow-md);
+}
+.demo-bar .actions { margin-inline-start: auto; display: flex; gap: 8px; }
+.demo-bar button {
+  padding-block: 5px; padding-inline: 12px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25); background: transparent;
+  color: inherit; font-size: 12px; font-weight: 600; transition: background 0.15s;
+}
+.demo-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* ==========================================================================
+   ۴) پوسته برنامه (Grid)
+   ========================================================================== */
+.app {
+  display: grid;
+  grid-template-columns: 264px 1fr; /* ستون اول در RTL به راست می‌رود */
+  min-block-size: calc(100vh - 44px);
+}
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+}
+
+/* ---------- سایدبار ---------- */
+.sidebar {
+  background: var(--surface-2);
+  border-inline-end: 1px solid var(--border);
+  padding-block: 22px; padding-inline: 18px;
+  display: flex; flex-direction: column; gap: 26px;
+  position: sticky; inset-block-start: 44px; block-size: calc(100vh - 44px);
+}
+.brand { display: flex; align-items: center; gap: 12px; padding-inline: 4px; }
+.brand-mark {
+  inline-size: 40px; block-size: 40px; border-radius: 12px;
+  display: grid; place-items: center; font-weight: 800; font-size: 18px; color: #fff;
+  background: linear-gradient(135deg, var(--lajvard-600), var(--firouzeh-500));
+}
+.brand-name { font-weight: 700; line-height: 1.2; }
+.brand-name span { display: block; font-size: 11px; color: var(--on-surface-muted); font-weight: 500; margin-block-start: 2px; }
+
+.nav { display: flex; flex-direction: column; gap: 4px; }
+.nav-label { font-size: 11px; color: var(--on-surface-muted); font-weight: 600; padding-inline: 12px; margin-block-end: 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding-block: 10px; padding-inline: 12px;
+  border-radius: var(--radius-sm); color: var(--on-surface-muted);
+  font-weight: 500; font-size: 14px; transition: background 0.15s, color 0.15s;
+}
+.nav-item:hover { background: var(--surface-3); color: var(--on-surface); }
+.nav-item.active { background: var(--primary-soft); color: var(--primary); font-weight: 700; }
+.sidebar-footer { margin-block-start: auto; }
+.user-mini { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: var(--radius-sm); background: var(--surface-3); }
+.avatar {
+  inline-size: 36px; block-size: 36px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 700; color: #fff; font-size: 14px;
+  background: linear-gradient(135deg, var(--firouzeh-500), var(--lajvard-600));
+}
+.user-name { font-size: 13px; font-weight: 700; }
+.user-role { font-size: 11px; color: var(--on-surface-muted); }
+
+/* ---------- مین ---------- */
+.main { display: flex; flex-direction: column; min-inline-size: 0; }
+.topbar {
+  display: flex; align-items: center; gap: 16px;
+  padding-block: 14px; padding-inline: 24px;
+  background: var(--surface-2); border-block-end: 1px solid var(--border);
+  position: sticky; inset-block-start: 44px; z-index: 20;
+}
+.search { position: relative; flex: 1; max-inline-size: 460px; }
+.search > svg { position: absolute; inset-inline-start: 14px; inset-block-start: 50%; transform: translateY(-50%); color: var(--on-surface-muted); }
+.search input {
+  inline-size: 100%; font: inherit; color: inherit; background: var(--surface-3);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding-block: 10px; padding-inline: 42px 16px; outline: none; transition: border-color 0.15s;
+}
+.search input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.topbar-actions { display: flex; align-items: center; gap: 10px; margin-inline-start: auto; }
+.icon-btn {
+  position: relative; inline-size: 40px; block-size: 40px; display: grid; place-items: center;
+  border-radius: 50%; border: 1px solid var(--border); background: var(--surface-2); color: var(--on-surface);
+}
+.icon-btn:hover { background: var(--surface-3); }
+.icon-btn .badge {
+  position: absolute; inset-inline-end: -4px; inset-block-start: -4px;
+  background: var(--danger); color: #fff; font-size: 10px; font-weight: 700;
+  padding: 1px 6px; border-radius: 999px; border: 2px solid var(--surface-2);
+}
+#theme-toggle .moon { display: none; }
+#theme-toggle .sun  { display: block; }
+[data-theme="dark"] #theme-toggle .sun  { display: none; }
+[data-theme="dark"] #theme-toggle .moon { display: block; }
+
+/* ---------- محتوا ---------- */
+.content { padding-block: 28px; padding-inline: 28px; display: flex; flex-direction: column; gap: 22px; max-inline-size: 1400px; inline-size: 100%; }
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.page-head h1 { margin: 0; font-size: 24px; font-weight: 800; }
+.page-head p { margin: 4px 0 0; color: var(--on-surface-muted); font-size: 13px; }
+
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; font-size: 12px; color: var(--on-surface-muted); }
+.breadcrumb a:hover { color: var(--primary); }
+.breadcrumb .sep { opacity: 0.5; }
+
+/* ---------- دکمه‌ها ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding-block: 10px; padding-inline: 16px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--on-surface);
+  font-weight: 600; font-size: 14px; transition: background 0.15s, transform 0.1s;
+}
+.btn:hover { background: var(--surface-3); }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--lajvard-700); border-color: var(--lajvard-700); }
+.btn-sm { padding-block: 6px; padding-inline: 10px; font-size: 12px; }
+
+/* ---------- کارت‌ها ---------- */
+.card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-sm); }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-block-end: 14px; }
+.card-head h2 { margin: 0; font-size: 16px; font-weight: 700; }
+.link-more { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--primary); }
+
+/* ---------- آمار ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .stats { grid-template-columns: 1fr; } }
+.stat-head { display: flex; align-items: center; justify-content: space-between; margin-block-end: 14px; }
+.stat-icon { inline-size: 40px; block-size: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); }
+.stat-icon.accent { background: rgba(42, 168, 160, 0.14); color: var(--accent); }
+.stat-icon.danger { background: var(--danger-soft); color: var(--danger); }
+.stat-icon.success { background: var(--success-soft); color: var(--success); }
+.trend { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+.trend.up { background: var(--success-soft); color: var(--success); }
+.trend.down { background: var(--danger-soft); color: var(--danger); }
+.stat-value { font-size: 22px; font-weight: 800; }
+.stat-label { font-size: 12px; color: var(--on-surface-muted); margin-block-start: 2px; }
+
+/* ---------- تب‌ها ---------- */
+.tabs { display: flex; gap: 4px; border-block-end: 1px solid var(--border); padding-inline: 4px; overflow-x: auto; }
+.tab { position: relative; padding-block: 10px; padding-inline: 14px; background: transparent; border: none; border-block-end: 2px solid transparent; color: var(--on-surface-muted); font-weight: 600; font-size: 14px; white-space: nowrap; }
+.tab:hover { color: var(--on-surface); }
+.tab[aria-selected="true"] { color: var(--primary); border-block-end-color: var(--primary); }
+.tab-panel { padding-block-start: 16px; font-size: 13px; color: var(--on-surface-muted); }
+
+/* ---------- گرید ---------- */
+.grid-2 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+@media (max-width: 1000px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* ---------- جدول ---------- */
+.table-wrap { overflow-x: auto; border-radius: 10px; }
+table { inline-size: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: start; padding-block: 12px; padding-inline: 12px; border-block-end: 1px solid var(--border); }
+th { font-weight: 600; color: var(--on-surface-muted); font-size: 12px; background: var(--surface-3); }
+tr:last-child td { border-block-end: 0; }
+tbody tr:hover td { background: var(--surface-3); }
+td code { direction: ltr; unicode-bidi: embed; font-family: var(--font-mono); font-size: 12px; background: var(--surface-3); padding: 1px 6px; border-radius: 6px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.pill::before { content: ""; inline-size: 6px; block-size: 6px; border-radius: 50%; background: currentColor; }
+.pill.success { background: var(--success-soft); color: var(--success); }
+.pill.pending { background: var(--warn-soft); color: var(--warn); }
+.pill.danger { background: var(--danger-soft); color: var(--danger); }
+
+/* ---------- چت ---------- */
+.chat { display: flex; flex-direction: column; gap: 10px; padding-block: 6px; max-block-size: 280px; overflow-y: auto; }
+.bubble { max-inline-size: 82%; padding-block: 10px; padding-inline: 14px; border-radius: 14px; font-size: 13px; line-height: 1.55; }
+.bubble.them { align-self: flex-start; background: var(--surface-3); border-end-start-radius: 4px; }
+.bubble.me { align-self: flex-end; background: var(--primary); color: var(--on-primary); border-end-end-radius: 4px; }
+.chat-input { display: flex; gap: 8px; margin-block-start: 10px; }
+.chat-input input { flex: 1; font: inherit; color: inherit; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding-block: 9px; padding-inline: 12px; outline: none; }
+.chat-input input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+
+/* ---------- فرم ---------- */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-full { grid-column: 1 / -1; }
+.field label { font-size: 12px; font-weight: 600; color: var(--on-surface-muted); }
+.field input, .field select, .field textarea { font: inherit; color: inherit; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding-block: 10px; padding-inline: 12px; text-align: start; outline: none; }
+.field input:focus, .field select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.field input[dir="ltr"] { text-align: left; font-variant-numeric: tabular-nums; }
+.field-error { font-size: 12px; color: var(--danger); text-align: start; margin-block-start: 2px; }
+.form-actions { display: flex; gap: 10px; justify-content: flex-end; padding-block-start: 6px; }
+
+/* ---------- آکاردئون ---------- */
+.accordion { display: flex; flex-direction: column; gap: 8px; }
+.accordion-item { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); overflow: hidden; }
+.accordion-trigger { inline-size: 100%; display: flex; align-items: center; gap: 12px; padding-block: 14px; padding-inline: 16px; background: transparent; border: none; color: var(--on-surface); font-weight: 600; font-size: 14px; text-align: start; }
+.accordion-trigger:hover { background: var(--surface-3); }
+.accordion-trigger .chevron { margin-inline-start: auto; transition: transform 0.2s; color: var(--on-surface-muted); }
+.accordion-trigger[aria-expanded="true"] .chevron { transform: rotate(90deg); }
+.accordion-panel { padding-block: 0 14px; padding-inline: 16px; font-size: 13px; line-height: 1.7; color: var(--on-surface-muted); display: none; }
+.accordion-panel.open { display: block; }
+
+/* ---------- صفحه‌بندی ---------- */
+.pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--on-surface-muted); }
+.page-list { display: flex; gap: 4px; list-style: none; padding: 0; margin: 0; }
+.page-list button { inline-size: 34px; block-size: 34px; display: grid; place-items: center; border: 1px solid var(--border); background: var(--surface-2); color: var(--on-surface); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
+.page-list button.active { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+
+/* ---------- مودال ---------- */
+.modal-backdrop { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(15, 23, 42, 0.55); padding-inline: 16px; z-index: 100; animation: fade-in 0.2s ease; }
+.modal-backdrop[hidden] { display: none; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.modal { inline-size: 100%; max-inline-size: 480px; background: var(--surface-2); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); animation: modal-in 0.22s ease; }
+@keyframes modal-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+.modal-header { display: flex; align-items: center; gap: 12px; margin-block-end: 16px; }
+.modal-header h2 { margin: 0; font-size: 18px; font-weight: 700; flex: 1; }
+.modal-close { inline-size: 32px; block-size: 32px; display: grid; place-items: center; border-radius: 50%; border: none; background: transparent; color: var(--on-surface-muted); }
+.modal-close:hover { background: var(--surface-3); }
+.modal-body p { margin: 0 0 20px; line-height: 1.7; color: var(--on-surface-muted); }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ---------- کشو (Drawer) - اصلاح شده ---------- */
+.drawer { position: fixed; inset-block: 0; inset-inline-start: 0; inline-size: min(340px, 90vw); background: var(--surface-2); box-shadow: var(--shadow-lg); transform: translateX(calc(var(--flow-dir) * -100%)); transition: transform 0.28s ease; z-index: 95; display: flex; flex-direction: column; }
+.drawer.open { transform: translateX(0); }
+.drawer-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 94; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+.drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+.drawer-header { display: flex; align-items: center; gap: 12px; padding: 16px; border-block-end: 1px solid var(--border); }
+.drawer-header h2 { margin: 0; font-size: 16px; font-weight: 700; flex: 1; }
+.drawer-body { padding: 16px; flex: 1; overflow-y: auto; }
+
+/* ---------- توست (Toast) ---------- */
+.toast-container { position: fixed; inset-block-start: 60px; inset-inline-end: 20px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 12px; padding-block: 12px; padding-inline: 16px; background: var(--surface-2); border: 1px solid var(--border); border-inline-start: 4px solid var(--accent); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); font-size: 13px; font-weight: 500; max-inline-size: 340px; pointer-events: auto; animation: toast-in 0.25s ease; }
+.toast.success { border-inline-start-color: var(--success); }
+.toast.danger { border-inline-start-color: var(--danger); }
+@keyframes toast-in { from { opacity: 0; transform: translateX(calc(var(--flow-dir) * 20px)); } to { opacity: 1; transform: translateX(0); } }
+.toast.leaving { animation: toast-out 0.2s ease forwards; }
+@keyframes toast-out { to { opacity: 0; transform: translateX(calc(var(--flow-dir) * 20px)); } }
+
+/* ---------- نکته (Notice) ---------- */
+.notice { border-inline-start: 4px solid var(--accent); font-size: 13px; line-height: 1.75; }
+.notice strong { color: var(--accent); }
+.notice code { background: var(--surface-3); padding: 1px 6px; border-radius: 6px; font-family: var(--font-mono); font-size: 12px; direction: ltr; unicode-bidi: embed; }
+.notice ul { margin: 10px 0 0; padding-inline-start: 20px; }
+</style>
+</head>
+<body>
+
+<!-- نوار دمو -->
+<div class="demo-bar">
+  <strong>rtl-vibe-ui — دموی کامل</strong>
+  <span>|</span>
+  <span>برای تست Logical Properties جهت را تغییر دهید:</span>
+  <div class="actions">
+    <button id="dir-toggle" title="تغییر جهت صفحه">RTL</button>
+    <button id="theme-toggle-top" title="حالت تاریک/روشن">☾ تاریک</button>
+  </div>
+</div>
+
+<div class="app">
+  <!-- سایدبار -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">آ</div>
+      <div class="brand-name">آرمان<span>پنل مدیریت</span></div>
+    </div>
+    <nav class="nav" aria-label="منوی اصلی">
+      <div class="nav-label">فضای کاری</div>
+      <a class="nav-item active" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        داشبورد
+      </a>
+      <a class="nav-item" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        سفارش‌ها
+      </a>
+      <a class="nav-item" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        محصولات
+      </a>
+      <div class="nav-label" style="margin-block-start: 18px;">سیستم</div>
+      <a class="nav-item" href="#">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        تنظیمات
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="avatar">م</div>
+        <div>
+          <div class="user-name">مریم رضایی</div>
+          <div class="user-role">مدیر فروش</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- مین -->
+  <main class="main">
+    <header class="topbar">
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="جستجو در سفارش‌ها..." aria-label="جستجو" />
+      </label>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="theme-toggle" aria-label="تغییر تم">
+          <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="اعلان‌ها">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="badge">۳</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- Breadcrumb -->
+      <nav aria-label="مسیر راهنما">
+        <ol class="breadcrumb">
+          <li><a href="#">خانه</a></li>
+          <li class="sep" aria-hidden="true">›</li>
+          <li><a href="#">داشبورد</a></li>
+          <li class="sep" aria-hidden="true">›</li>
+          <li aria-current="page">فروش</li>
+        </ol>
+      </nav>
+
+      <!-- Page Head -->
+      <div class="page-head">
+        <div>
+          <h1>داشبورد فروش</h1>
+          <p>خلاصه‌ای از عملکرد فروشگاه در ۳۰ روز گذشته</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn" id="open-drawer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            فیلترها
+          </button>
+          <button class="btn btn-primary" id="open-modal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            افزودن محصول
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <section class="stats" aria-label="آمار کلیدی">
+        <article class="card">
+          <div class="stat-head">
+            <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <span class="trend up">+۱۲٫۵٪</span>
+          </div>
+          <div class="stat-value">۱۲٬۴۸۰٬۰۰۰</div>
+          <div class="stat-label">درآمد امروز (تومان)</div>
+        </article>
+        <article class="card">
+          <div class="stat-head">
+            <div class="stat-icon accent"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+            <span class="trend up">+۸٫۲٪</span>
+          </div>
+          <div class="stat-value">۳۴۲</div>
+          <div class="stat-label">سفارش‌های جدید</div>
+        </article>
+      </section>
+
+      <!-- Tabs -->
+      <section class="card">
+        <div class="tabs" role="tablist" aria-label="بخش‌های داشبورد">
+          <button class="tab" role="tab" aria-selected="true" aria-controls="panel-overview" id="tab-overview">نمای کلی</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="panel-orders" id="tab-orders">سفارش‌ها</button>
+        </div>
+        <div class="tab-panel" role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">نمای کلی فروشگاه — آمار کلیدی و نمودارهای پیشرفت در این بخش نمایش داده می‌شوند.</div>
+        <div class="tab-panel" role="tabpanel" id="panel-orders" aria-labelledby="tab-orders" hidden>فهرست کامل سفارش‌ها با امکان فیلتر بر اساس وضعیت، تاریخ، و مبلغ.</div>
+      </section>
+
+      <!-- Grid: Table + Chat -->
+      <section class="grid-2">
+        <article class="card">
+          <div class="card-head">
+            <h2>آخرین سفارش‌ها</h2>
+            <a class="link-more" href="#">
+              مشاهده همه
+              <svg class="mirror-in-rtl" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>شماره سفارش</th>
+                  <th>مشتری</th>
+                  <th>مبلغ</th>
+                  <th>وضعیت</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>#AR-10254</code></td>
+                  <td>علی محمدی</td>
+                  <td>۱٬۲۵۰٬۰۰۰ تومان</td>
+                  <td><span class="pill success">ارسال شده</span></td>
+                </tr>
+                <tr>
+                  <td><code>#AR-10253</code></td>
+                  <td>سارا احمدی</td>
+                  <td>۸۹۰٬۰۰۰ تومان</td>
+                  <td><span class="pill pending">در حال پردازش</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>پشتیبانی</h2>
+            <span class="pill success">آنلاین</span>
+          </div>
+          <div class="chat">
+            <div class="bubble them">سلام، سفارش من کی به دستم می‌رسد؟</div>
+            <div class="bubble me">سلام. سفارش شما فردا صبح ارسال می‌شود.</div>
+          </div>
+          <form class="chat-input" onsubmit="event.preventDefault();">
+            <input type="text" placeholder="پیام خود را بنویسید…" aria-label="متن پیام" />
+            <button class="btn btn-primary" type="submit">ارسال</button>
+          </form>
+        </article>
+      </section>
+
+      <!-- Accordion -->
+      <section class="card">
+        <div class="card-head"><h2>سوالات متداول</h2></div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-1">
+              چطور می‌توانم سفارش خود را پیگیری کنم؟
+              <svg class="chevron mirror-in-rtl" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="accordion-panel" id="acc-1">از بخش «سفارش‌ها» شماره سفارش خود را وارد کنید و وضعیت ارسال را ببینید.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Form -->
+      <section class="card">
+        <div class="card-head"><h2>ثبت سفارش جدید</h2></div>
+        <form class="form-grid" onsubmit="event.preventDefault();">
+          <div class="field">
+            <label for="f-name">نام و نام خانوادگی</label>
+            <input id="f-name" type="text" placeholder="مثلاً مریم رضایی" />
+          </div>
+          <div class="field">
+            <label for="f-email">ایمیل</label>
+            <input id="f-email" type="email" dir="ltr" placeholder="maryam@example.com" />
+          </div>
+          <div class="field">
+            <label for="f-phone">شماره تلفن</label>
+            <input id="f-phone" type="tel" dir="ltr" placeholder="+98 912 000 0000" />
+            <p class="field-error">شماره باید ۱۱ رقم باشد.</p>
+          </div>
+        </form>
+      </section>
+
+      <!-- Notice -->
+      <section class="card notice">
+        <strong>این صفحه با اسکیل <code>rtl-vibe-ui</code> ساخته شده است.</strong>
+        <p style="margin: 6px 0 0; color: var(--on-surface-muted);">
+          دکمه <code>RTL</code> در نوار بالا را بزن تا همان کد، بدون تغییر، در جهت مخالف هم درست کار کند.
+        </p>
+        <ul>
+          <li>همه فاصله‌ها با <code>margin-inline-*</code> / <code>padding-inline-*</code> / <code>inset-inline-*</code>.</li>
+          <li>آیکون‌های جهت‌دار با <code>[dir="rtl"] .mirror-in-rtl</code> آینه می‌شوند.</li>
+          <li>فونت Vazirmatn با <code>font-feature-settings: "ss01"</code> و <code>letter-spacing: 0</code>.</li>
+          <li>فیلدهای ایمیل و تلفن با <code>dir="ltr"</code> — اعداد به‌هم نمی‌ریزند.</li>
+          <li>انیمیشن Drawer با <code>var(--flow-dir)</code> — در RTL از راست، در LTR از چپ.</li>
+        </ul>
+        <div style="margin-block-start: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn btn-sm" id="show-toast-accent">نمایش Toast فیروزه‌ای</button>
+          <button class="btn btn-sm" id="show-toast-success">نمایش Toast موفقیت</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- ================= Modal ================= -->
+<div class="modal-backdrop" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <header class="modal-header">
+      <h2 id="modal-title">افزودن محصول جدید</h2>
+      <button class="modal-close" id="close-modal" aria-label="بستن">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+    <div class="modal-body">
+      <p>برای افزودن محصول جدید، فرم مربوطه را در صفحه محصولات پر کنید. آیا مایلید به صفحه محصولات بروید؟</p>
+    </div>
+    <footer class="modal-footer">
+      <button class="btn" id="cancel-modal">انصراف</button>
+      <button class="btn btn-primary" id="confirm-modal">بله، برو</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ================= Drawer ================= -->
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <header class="drawer-header">
+    <h2 id="drawer-title">فیلترهای پیشرفته</h2>
+    <button class="modal-close" id="close-drawer" aria-label="بستن">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </header>
+  <div class="drawer-body">
+    <p style="font-size: 13px; font-weight: 600;">وضعیت سفارش</p>
+    <div class="field" style="margin-block-end: 14px;">
+      <select>
+        <option>همه</option>
+        <option>ارسال شده</option>
+        <option>در حال پردازش</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" style="inline-size: 100%;">اعمال فیلترها</button>
+  </div>
+</aside>
+
+<!-- ================= Toast ================= -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<script>
+/* تغییر تم */
+const root = document.documentElement;
+const themeTopBtn = document.getElementById("theme-toggle-top");
+const themeIconBtn = document.getElementById("theme-toggle");
+
+function toggleTheme() {
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  themeTopBtn.textContent = root.dataset.theme === "dark" ? "☀ روشن" : "☾ تاریک";
+}
+themeTopBtn.addEventListener("click", toggleTheme);
+themeIconBtn.addEventListener("click", toggleTheme);
+
+/* تغییر جهت */
+const dirBtn = document.getElementById("dir-toggle");
+dirBtn.addEventListener("click", () => {
+  root.dir = root.dir === "rtl" ? "ltr" : "rtl";
+  dirBtn.textContent = root.dir.toUpperCase();
+});
+
+/* Modal */
+const modal = document.getElementById("modal");
+const openModalBtn = document.getElementById("open-modal");
+const closeModalBtn = document.getElementById("close-modal");
+const cancelModalBtn = document.getElementById("cancel-modal");
+const confirmModalBtn = document.getElementById("confirm-modal");
+let lastFocusedModal = null;
+
+function showModal() {
+  lastFocusedModal = document.activeElement;
+  modal.hidden = false;
+  const first = modal.querySelector("button, [href], input, select, textarea");
+  first?.focus();
+}
+function hideModal() {
+  modal.hidden = true;
+  lastFocusedModal?.focus();
+}
+openModalBtn.addEventListener("click", showModal);
+closeModalBtn.addEventListener("click", hideModal);
+cancelModalBtn.addEventListener("click", hideModal);
+confirmModalBtn.addEventListener("click", () => {
+  hideModal();
+  showToast("محصول با موفقیت افزوده شد", "success");
+});
+modal.addEventListener("click", (e) => { if (e.target === modal) hideModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modal.hidden) hideModal(); });
+
+/* Drawer (بدون باگ) */
+const drawer = document.getElementById("drawer");
+const drawerBackdrop = document.getElementById("drawer-backdrop");
+const openDrawerBtn = document.getElementById("open-drawer");
+const closeDrawerBtn = document.getElementById("close-drawer");
+let lastFocusedDrawer = null;
+
+function showDrawer() {
+  lastFocusedDrawer = document.activeElement;
+  drawer.classList.add("open");
+  drawerBackdrop.classList.add("open");
+  const first = drawer.querySelector("button, [href], input, select, textarea");
+  first?.focus();
+}
+function hideDrawer() {
+  drawer.classList.remove("open");
+  drawerBackdrop.classList.remove("open");
+  lastFocusedDrawer?.focus();
+}
+openDrawerBtn.addEventListener("click", showDrawer);
+closeDrawerBtn.addEventListener("click", hideDrawer);
+drawerBackdrop.addEventListener("click", hideDrawer);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && drawer.classList.contains("open")) hideDrawer(); });
+
+/* Tabs */
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    tabs.forEach((t) => {
+      t.setAttribute("aria-selected", "false");
+      const panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = true;
+    });
+    tab.setAttribute("aria-selected", "true");
+    const panel = document.getElementById(tab.getAttribute("aria-controls"));
+    if (panel) panel.hidden = false;
+  });
+});
+
+/* Accordion */
+document.querySelectorAll(".accordion-trigger").forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    const expanded = trigger.getAttribute("aria-expanded") === "true";
+    trigger.setAttribute("aria-expanded", String(!expanded));
+    const panel = document.getElementById(trigger.getAttribute("aria-controls"));
+    if (panel) panel.classList.toggle("open", !expanded);
+  });
+});
+
+/* Toast */
+const toastContainer = document.getElementById("toast-container");
+function showToast(message, variant = "accent") {
+  const toast = document.createElement("div");
+  toast.className = `toast ${variant}`;
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add("leaving");
+    toast.addEventListener("animationend", () => toast.remove(), { once: true });
+  }, 3000);
+}
+document.getElementById("show-toast-accent").addEventListener("click", () => showToast("فیلترها اعمال شد", "accent"));
+document.getElementById("show-toast-success").addEventListener("click", () => showToast("سفارش با موفقیت ثبت شد", "success"));
+</script>
+
+</body>
+</html>

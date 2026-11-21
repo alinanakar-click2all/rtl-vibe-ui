@@ -1,0 +1,182 @@
+
+**`skills/rtl-vibe-ui/assets/tailwind-tokens.css`**
+```css
+/* ============================================================
+   RTL Vibe UI — Tailwind v4 Semantic Tokens
+   ------------------------------------------------------------
+   این فایل توکن‌های معنایی را برای پروژه‌های فارسی/عربی تعریف می‌کند.
+   کامپوننت‌ها باید فقط از کلاس‌های معنایی (bg-surface, text-on-surface,
+   border-border, ...) استفاده کنند — نه هگز خام و نه رنگ primitive.
+
+   سازگاری: Tailwind CSS v4.0+ (ویژگی‌های منطقی درون‌خطی در هسته).
+   برای محور بلوکی منطقی (mbs-*, pbe-*) نیازمند v4.2+ است.
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* ------------------------------------------------------------
+   ۱) حالت تاریک — کلاس‌محور و data-attribute محور
+   ------------------------------------------------------------
+   به‌جای prefers-color-scheme، از [data-theme="dark"] استفاده می‌کنیم
+   تا کاربر بتواند دستی تم را تغییر دهد و اسکیل در هر دو حالت تست شود.
+   ------------------------------------------------------------ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------
+   ۲) توکن‌های معنایی (Semantic Tokens)
+   ------------------------------------------------------------
+   این توکن‌ها با @theme inline تعریف می‌شوند تا مقادیرشان مستقیماً در
+   کلاس‌های تولیدشده inline شود و در زمان اجرا با override کردن
+   CSS custom properties قابل تغییر باشند.
+   ------------------------------------------------------------ */
+@theme inline {
+  /* ---------- Typography ---------- */
+  --font-sans: "Vazirmatn", "Vazir", "Geist", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "JetBrains Mono", monospace;
+
+  /* ---------- Primitive Colors (فقط برای تعریف semantic استفاده شوند) ---------- */
+  --color-lajvard-400: #4F68E5;
+  --color-lajvard-600: #1C39BB;
+  --color-lajvard-700: #152D93;
+  --color-firouzeh-500: #2AA8A0;
+  --color-anar-600: #C62828;
+  --color-puste-500: #8BB174;
+
+  /* ---------- Semantic Surfaces ---------- */
+  --color-surface: var(--token-surface);
+  --color-surface-2: var(--token-surface-2);
+  --color-surface-3: var(--token-surface-3);
+
+  /* ---------- Semantic Text ---------- */
+  --color-on-surface: var(--token-on-surface);
+  --color-on-surface-muted: var(--token-on-surface-muted);
+
+  /* ---------- Semantic Borders ---------- */
+  --color-border: var(--token-border);
+
+  /* ---------- Semantic Brand ---------- */
+  --color-primary: var(--token-primary);
+  --color-on-primary: var(--token-on-primary);
+  --color-primary-soft: var(--token-primary-soft);
+
+  /* ---------- Semantic Feedback ---------- */
+  --color-success: var(--token-success);
+  --color-success-soft: var(--token-success-soft);
+  --color-danger: var(--token-danger);
+  --color-danger-soft: var(--token-danger-soft);
+  --color-warn: var(--token-warn);
+  --color-warn-soft: var(--token-warn-soft);
+
+  /* ---------- Accent (فیروزه‌ای) ---------- */
+  --color-accent: var(--color-firouzeh-500);
+  --color-accent-soft: rgba(42, 168, 160, 0.14);
+
+  /* ---------- Radius ---------- */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+}
+
+/* ------------------------------------------------------------
+   ۳) مقادیر حالت روشن (Light Mode Defaults)
+   ------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  --token-surface: #F6F8FC;
+  --token-surface-2: #FFFFFF;
+  --token-surface-3: #EDF1F8;
+
+  --token-on-surface: #0F172A;
+  --token-on-surface-muted: #64748B;
+
+  --token-border: #E2E8F0;
+
+  --token-primary: var(--color-lajvard-600);
+  --token-on-primary: #FFFFFF;
+  --token-primary-soft: rgba(28, 57, 187, 0.08);
+
+  --token-success: #4D7A3A;
+  --token-success-soft: rgba(139, 177, 116, 0.16);
+
+  --token-danger: var(--color-anar-600);
+  --token-danger-soft: rgba(198, 40, 40, 0.10);
+
+  --token-warn: #B45309;
+  --token-warn-soft: rgba(245, 158, 11, 0.14);
+}
+
+/* ------------------------------------------------------------
+   ۴) مقادیر حالت تاریک (Dark Mode Overrides)
+   ------------------------------------------------------------
+   فقط توکن‌های معنایی را بازنویسی می‌کنیم — هیچ کامپوننتی تغییر نمی‌کند.
+   ------------------------------------------------------------ */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --token-surface: #0B1220;
+  --token-surface-2: #111A2E;
+  --token-surface-3: #17233D;
+
+  --token-on-surface: #E6EDF7;
+  --token-on-surface-muted: #93A2BD;
+
+  --token-border: #223049;
+
+  --token-primary: var(--color-lajvard-400);
+  --token-on-primary: #FFFFFF;
+  --token-primary-soft: rgba(79, 104, 229, 0.14);
+
+  --token-success: #9DCB87;
+  --token-success-soft: rgba(139, 177, 116, 0.18);
+
+  --token-danger-soft: rgba(198, 40, 40, 0.18);
+
+  --token-warn: #F5B342;
+  --token-warn-soft: rgba(245, 158, 11, 0.16);
+}
+
+/* ------------------------------------------------------------
+   ۵) ابزارهای سفارشی تایپوگرافی RTL
+   ------------------------------------------------------------
+   @utility یک کلاس سفارشی می‌سازد که در همه variantها (hover:, md: و…)
+   قابل استفاده است.
+   ------------------------------------------------------------ */
+
+/* متن RTL با فرم‌های ترجیحی فارسی و letter-spacing صفر */
+@utility rtl-text {
+  font-feature-settings: "ss01";
+  letter-spacing: 0;
+}
+
+/* فیلدهای LTR (ایمیل، URL، تلفن، کد) */
+@utility ltr-field {
+  direction: ltr;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------
+   ۶) پایه (Base Layer)
+   ------------------------------------------------------------
+   تنظیمات پیش‌فرض بدنه برای فارسی/عربی.
+   ------------------------------------------------------------ */
+@layer base {
+  html {
+    @apply font-sans;
+    font-feature-settings: "ss01";
+    letter-spacing: 0;
+  }
+
+  body {
+    @apply bg-surface text-on-surface;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* اعداد در متن RTL به‌صورت پیش‌فرض tabular می‌مانند */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}

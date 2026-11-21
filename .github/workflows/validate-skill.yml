@@ -1,0 +1,39 @@
+name: Validate Skill
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install skills-ref
+        run: pip install --quiet skills-ref
+
+      - name: Validate skill structure
+        run: skills-ref validate ./skills/rtl-vibe-ui
+
+      - name: Verify all reference files exist
+        run: |
+          for f in 01-foundations 02-typography 03-color-and-tokens \
+                   04-components 05-motion 06-accessibility 07-checklist; do
+            test -f "skills/rtl-vibe-ui/references/$f.md" || exit 1
+          done
+          echo "All reference files present."
+
+      - name: Check frontmatter version matches CHANGELOG
+        run: |
+          VERSION=$(grep -oP 'version: "\K[^"]+' skills/rtl-vibe-ui/SKILL.md | head -1)
+          grep -q "## \[$VERSION\]" CHANGELOG.md || exit 1
+          echo "Version $VERSION found in CHANGELOG."
+
+      - name: RTL audit
+        run: node scripts/audit-rtl.mjs skills/rtl-vibe-ui/assets --check
