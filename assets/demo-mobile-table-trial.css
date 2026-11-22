@@ -1,0 +1,58 @@
+/* RTL Vibe UI — Stage 63 mobile orders table trial.
+ * Preserve the native <table> on desktop; allow contained horizontal scrolling
+ * on compact screens instead of breaking order IDs, amounts and status badges.
+ */
+.orders-scroll-hint { display: none; }
+
+@media (max-width: 560px) {
+  .grid-2 > article.card:first-child { min-inline-size: 0; }
+
+  .orders-scroll-hint {
+    display: block;
+    margin: 0 0 8px;
+    color: var(--on-surface-muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .grid-2 > article.card:first-child .table-wrap {
+    inline-size: 100%;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    margin-inline: 0; /* Overrides the base mobile -4px margin. */
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    scrollbar-width: thin;
+  }
+
+  .grid-2 > article.card:first-child .table-wrap:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+
+  .grid-2 > article.card:first-child .table-wrap table {
+    min-inline-size: 560px;
+    inline-size: 100%;
+  }
+
+  .grid-2 > article.card:first-child .table-wrap :is(th, td) {
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .grid-2 > article.card:first-child .table-wrap td code {
+    display: inline-block;
+    direction: ltr;
+    unicode-bidi: isolate;
+    white-space: nowrap;
+  }
+
+  .grid-2 > article.card:first-child .table-wrap .pill {
+    white-space: nowrap;
+    flex-wrap: nowrap;
+  }
+}

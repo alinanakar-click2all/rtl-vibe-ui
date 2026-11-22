@@ -69,13 +69,16 @@ jobs:
           cache-dependency-path: browser-check/package-lock.json
 
       - name: Test legacy preview and official demo promotion
-        run: node --test tests/demo-preview-build.test.mjs tests/promote-demo.test.mjs tests/build-visual-preview.test.mjs tests/promote-visual.test.mjs
+        run: node --test tests/demo-preview-build.test.mjs tests/promote-demo.test.mjs tests/build-visual-preview.test.mjs tests/promote-visual.test.mjs tests/build-mobile-table-trial.test.mjs tests/promote-mobile-table.test.mjs
 
       - name: Verify official demo structure and linked assets
         run: node scripts/promote-demo.mjs --check
 
       - name: Verify official visual dashboard assets
         run: node scripts/promote-visual.mjs --check
+
+      - name: Verify official responsive orders table
+        run: node scripts/promote-mobile-table.mjs --check
 
       - name: Install browser test dependencies
         working-directory: browser-check
@@ -85,7 +88,7 @@ jobs:
         working-directory: browser-check
         run: npx playwright install --with-deps chromium
 
-      - name: Test official demo interactions and visual analytics in Chromium
+      - name: Test official demo, analytics and mobile orders table in Chromium
         working-directory: browser-check
         run: npm test
 

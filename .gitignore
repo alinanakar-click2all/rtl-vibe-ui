@@ -13,3 +13,6 @@
 
 # Trial-only browser report (not tracked)
 /browser-check/playwright-report-visual/
+
+# Local, trial-only Playwright report
+/browser-check/playwright-report-table-trial/

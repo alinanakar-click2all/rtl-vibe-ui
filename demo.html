@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="fa" data-theme="light">
 <head>
+<!-- Stage 66: approved responsive orders-table enhancement. -->
+<link rel="stylesheet" href="assets/demo-mobile-table-trial.css">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>آرمان — دموی کامل rtl-vibe-ui</title>
@@ -505,7 +507,8 @@ td code { direction: ltr; unicode-bidi: embed; font-family: var(--font-mono); fo
               <svg class="mirror-in-rtl" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
           </div>
-          <div class="table-wrap">
+          <p class="orders-scroll-hint" id="orders-scroll-hint">برای مشاهده همه ستون‌ها، جدول را به چپ و راست پیمایش کنید.</p>
+<div class="table-wrap" role="region" aria-label="جدول آخرین سفارش‌ها" aria-describedby="orders-scroll-hint" tabindex="0">
             <table>
               <thead>
                 <tr>

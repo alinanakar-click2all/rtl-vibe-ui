@@ -39,3 +39,9 @@ Avoid committing generated output, `node_modules/`, screenshots, or reports. The
 After promoting the approved visualization via `node scripts/promote-visual.mjs --apply`, the normal `npm test` discovers **14 tests**: the original eight interaction tests and six tests in `tests/visual.spec.mjs`. The latter verify the sample SVG, seven-/thirty-day updates, keyboard activation, RTL/LTR and themes, and 1440px/400px/320px root overflow.
 
 The former trial-only `tests/visual.manual.mjs` and `playwright.visual.config.mjs` can be removed after successful official tests. They must not be committed as part of the official suite. See `../README-STAGE60.md`.
+
+## Stage 66: responsive orders table in the official demo
+
+The official `npm test` suite now discovers **18 Playwright tests**: the original 14 plus four tests in `tests/mobile-table.spec.mjs`. These assert a native, scrollable orders table at 320px and 400px without root overflow or broken IDs, a preserved desktop layout and working direction/theme toggles. The local-only `mobile-table.table-trial.mjs` and `playwright.table.config.mjs` are not required for CI.
+
+After the one-time promotion, run `node scripts/promote-mobile-table.mjs --check`. The old trial builder deliberately refuses an already-promoted official demo. See `../README-STAGE66.md`.
