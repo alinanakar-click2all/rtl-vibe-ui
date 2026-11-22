@@ -191,23 +191,28 @@ Detailed guides belong in the following paths relative to this `SKILL.md`:
 | Semantics and keyboard accessibility | `references/06-accessibility.md` |
 | Review and PR acceptance checklist | `references/07-checklist.md` |
 
-**Current repository limitation (2026-11-22):** Some reference files above are
-truncated or contain copied Markdown wrappers. Use only their intact portions;
-do not treat them as complete implementations or blindly copy their snippets.
-Fix and validate the references in a later maintenance phase.
+**Repository status (2026-11-22):** The seven references above are
+available as structured Markdown engineering guides. The earlier
+warning about truncated files and copied Markdown wrappers no longer
+describes their current file structure. Their examples still require
+integration and behavioral validation in each target framework.
 
-The file `assets/tailwind-tokens.css` is a **candidate asset**, not a
-validated drop-in stylesheet in the current repository: its published contents
-include Markdown wrappers. Strip those wrappers and compile/test it before
-using it. The palette is optional and must not override an existing brand.
+The `assets/tailwind-tokens.css` file is now plain CSS source intended
+for a Tailwind CSS v4 build pipeline. The previous Markdown wrapper
+issue has been resolved. A local Tailwind CSS v4.3.5 CLI smoke build
+succeeded, and nine selected CSS class/token markers were verified.
+This does not establish full host-framework integration, visual quality,
+contrast compliance, or universal production compatibility.
+The palette is optional and must respect the existing product brand.
 
-The optional audit script is located at repository root:
-`../../scripts/audit-rtl.mjs` (relative to this skill directory). It might not
-be distributed when the skill is installed standalone. At present its rules
-and `--check` exit behavior are not reliable enough for a CI pass/fail gate;
-**never auto-run `--fix` on user files**. If the tool is available, use it
-only as supplementary diagnostics, review its findings manually, and report
-its limitations. Repair and test it separately before enabling CI enforcement.
+The optional repository-level auditor is `../../scripts/audit-rtl.mjs`
+(relative to this skill directory). It now has automated Node.js tests,
+and repository CI runs `--check` against the skill assets. It remains
+a heuristic static-analysis tool, not a complete RTL validator:
+`--check` fails on errors, while warnings only become failures with
+`--strict`. The script may be unavailable in standalone skill installs.
+Review its findings manually, do not automatically run `--fix` on user
+files, and validate real UI behavior in the target application.
 
 ## 4. Small reference implementation
 
