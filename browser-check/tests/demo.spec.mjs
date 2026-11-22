@@ -5,16 +5,17 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '../..');
-const previewPath = join(repoRoot, 'demo-upgraded-preview.html');
+// Preview candidate only when explicitly requested. CI always tests tracked demo.html.
+const demoPath = join(repoRoot, process.env.DEMO_HTML === 'candidate' ? 'demo-official-candidate.html' : 'demo.html');
 const artifactsDir = resolve(here, '../artifacts');
 
-async function openPreview(page) {
-  if (!existsSync(previewPath)) {
-    throw new Error('Missing demo-upgraded-preview.html. Run: node scripts/build-demo-preview.mjs from the repository root.');
+async function openDemo(page) {
+  if (!existsSync(demoPath)) {
+    throw new Error(`Missing demo HTML: ${demoPath}. Prepare with node scripts/promote-demo.mjs --prepare, or promote to demo.html.`);
   }
   const exceptions = [];
   page.on('pageerror', error => exceptions.push(error.message));
-  await page.goto(pathToFileURL(previewPath).href, { waitUntil: 'domcontentloaded' });
+  await page.goto(pathToFileURL(demoPath).href, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.app')).toBeVisible();
   // Runtime exceptions are checked after the page has loaded.
   expect(exceptions, `Browser JavaScript exceptions: ${exceptions.join(' | ')}`).toEqual([]);
@@ -32,8 +33,24 @@ async function saveEvidence(page, file) {
   await page.screenshot({ path: join(artifactsDir, file), fullPage: true, animations: 'disabled' });
 }
 
+test('official demo references and loads shared enhancement assets', async ({ page }) => {
+  await page.setViewportSize({ width: 400, height: 824 });
+  await openDemo(page);
+  await expect(page.locator('link[href="assets/demo-enhancements.css"]')).toHaveCount(1);
+  await expect(page.locator('script[src="assets/demo-enhancements.js"]')).toHaveCount(1);
+  await expect(page.locator('#mobile-nav-toggle')).toHaveCSS('display', 'grid');
+  await expect(page.locator('#mobile-sidebar')).toHaveAttribute('inert', '');
+  // These checks detect silent CSS/JS load failures even when the DOM is present.
+  const colors = await page.locator('#mobile-nav-toggle').evaluate(el => ({
+    size: getComputedStyle(el).width,
+    ready: document.querySelector('#drawer').inert,
+  }));
+  expect(colors.size).toBe('44px');
+  expect(colors.ready).toBe(true);
+});
+
 test('desktop keeps the original RTL layout and allows theme and direction toggles', async ({ page }) => {
-  await openPreview(page);
+  await openDemo(page);
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await expect(page.locator('.sidebar')).toBeVisible();
   const themeBefore = await page.locator('html').getAttribute('data-theme');
@@ -46,7 +63,7 @@ test('desktop keeps the original RTL layout and allows theme and direction toggl
 });
 
 test('modal traps Tab focus, closes with Escape and restores trigger focus', async ({ page }) => {
-  await openPreview(page);
+  await openDemo(page);
   await page.locator('#open-modal').click();
   await expect(page.locator('#modal')).toBeVisible();
   await expect(page.locator('.app')).toHaveAttribute('inert', '');
@@ -61,7 +78,7 @@ test('modal traps Tab focus, closes with Escape and restores trigger focus', asy
 });
 
 test('filter drawer starts inert, traps focus, and becomes inert after closing', async ({ page }) => {
-  await openPreview(page);
+  await openDemo(page);
   await expect(page.locator('#drawer')).toHaveAttribute('inert', '');
   await page.locator('#open-drawer').click();
   await expect(page.locator('#drawer')).toHaveClass(/open/);
@@ -77,7 +94,7 @@ test('filter drawer starts inert, traps focus, and becomes inert after closing',
 });
 
 test('tabs activate panels by click, Arrow key, Home and End', async ({ page }) => {
-  await openPreview(page);
+  await openDemo(page);
   const first = page.locator('#tab-overview');
   const second = page.locator('#tab-orders');
   await expect(first).toHaveAttribute('aria-selected', 'true');
@@ -99,7 +116,7 @@ test('tabs activate panels by click, Arrow key, Home and End', async ({ page }) 
 for (const width of [400, 320]) {
   test(`mobile menu, keyboard and horizontal overflow at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 824 });
-    await openPreview(page);
+    await openDemo(page);
     const navToggle = page.locator('#mobile-nav-toggle');
     await expect(navToggle).toBeVisible();
     await expect(page.locator('#mobile-sidebar')).toHaveAttribute('inert', '');
@@ -128,7 +145,7 @@ for (const width of [400, 320]) {
 }
 
 test('phone input is associated with a descriptive hint', async ({ page }) => {
-  await openPreview(page);
+  await openDemo(page);
   await expect(page.locator('#phone-hint')).toHaveCount(1);
   await expect(page.locator('#f-phone')).toHaveAttribute('aria-describedby', /phone-hint/);
 });

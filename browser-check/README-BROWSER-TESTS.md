@@ -1,37 +1,35 @@
-# RTL Vibe UI — Browser interaction smoke test (local preview)
+# RTL Vibe UI — official demo browser tests
 
-These tests use **real Google Chrome**, via Playwright Test, and read `../demo-upgraded-preview.html` only. They never edit `demo.html`, the preview, source JS, or source CSS.
+These tests exercise the **official** `../demo.html` (rather than a generated preview). They use Google Chrome when run locally and Playwright-managed Chromium in GitHub Actions.
 
-## Windows Git Bash setup
+## Setup (Windows Git Bash)
 
-1. Keep the original `demo.html` and generated `demo-upgraded-preview.html` in the repository root. If needed, regenerate the preview first with `node scripts/build-demo-preview.mjs` from the repository root.
-2. Extract `browser-check/` into the root of `D:\Ai\rtl-vibe-ui`.
-3. Open Git Bash at `D:\Ai\rtl-vibe-ui`:
+```bash
+cd /d/Ai/rtl-vibe-ui
+cd browser-check
+npm ci
+npm test
+```
 
-   ```bash
-   cd browser-check
-   npm install
-   npm test
-   ```
+The official `demo.html` must have been promoted first (see `../README-DEMO-PROMOTION.md`). If you want to validate the candidate **before** changing the tracked file, run from the repository root:
 
-`npm install` requires internet access and installs only local dev dependencies. The tests use your already-installed Google Chrome (`channel: 'chrome'`), so a separate `playwright install` download is not necessary. Do not run as Administrator.
+```bash
+node scripts/promote-demo.mjs --prepare
+DEMO_HTML=candidate npm --prefix browser-check test
+```
 
-## Reading output
+Then compare `demo-official-candidate.html` visually with your previous `demo-upgraded-preview.html`. After approval:
 
-- Expected number of cases: **7**. A failing case is a diagnostic, not a reason to alter original `demo.html` immediately.
-- On success or failure, screenshots are saved in `browser-check/artifacts/`; test failures also retain screenshots/traces in `browser-check/test-results/`.
-- To inspect the HTML report: `npm run test:report`.
-- Send the console test output and the problematic screenshots for review.
-- Tests are deliberately conservative: key focus and layout flows are tested, but this is not a complete WCAG or Screen Reader audit.
-- Because the original Tabs section only has two tabs, the arrow-key test does not establish that directionality is correct for groups with more than two tabs.
+```bash
+node scripts/promote-demo.mjs --apply
+node scripts/promote-demo.mjs --check
+npm --prefix browser-check test
+```
 
-## Git safety
+## Coverage and evidence
 
-`browser-check/.gitignore` excludes `node_modules`, results, and screenshots. The generated `demo-upgraded-preview.html` is still untracked and should not be committed. Do not use `git add .` at this stage. Keep the browser-check directory uncommitted until test results are reviewed.
+The suite checks external CSS and JS loading, direction/theme controls, keyboard focus management of Modal and Drawer, Tabs, responsive mobile navigation and horizontal overflow at 400px/320px, and the phone-field hint association. Tests are smoke coverage, **not** a full WCAG or screen-reader audit.
 
-## Troubleshooting
+Screenshots: `browser-check/artifacts/`; failed-test traces and screenshots: `browser-check/test-results/`; HTML report: `cd browser-check && npm run test:report`.
 
-- `Executable doesn't exist` or Chrome missing: install Chrome or edit the Playwright channel setting to a supported installed browser.
-- File not found: regenerate `demo-upgraded-preview.html` in the repository root, then re-run.
-- `npm install` network error: no repository file needs to be changed; retry when npm registry access works.
-- If there are failures, share the exact error and screenshot; don't immediately fix with CSS overrides.
+Avoid committing generated output, `node_modules/`, screenshots, or reports. Their locations are excluded by `.gitignore`.

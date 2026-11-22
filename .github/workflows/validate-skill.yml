@@ -53,7 +53,7 @@ jobs:
         run: node scripts/audit-rtl.mjs skills/rtl-vibe-ui/assets --check
 
   demo-browser:
-    name: Demo preview and browser tests
+    name: Official demo browser tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -68,11 +68,11 @@ jobs:
           cache: npm
           cache-dependency-path: browser-check/package-lock.json
 
-      - name: Test non-destructive demo preview builder
-        run: node --test tests/demo-preview-build.test.mjs
+      - name: Test legacy preview and official demo promotion
+        run: node --test tests/demo-preview-build.test.mjs tests/promote-demo.test.mjs
 
-      - name: Build demo preview
-        run: node scripts/build-demo-preview.mjs
+      - name: Verify official demo structure and linked assets
+        run: node scripts/promote-demo.mjs --check
 
       - name: Install browser test dependencies
         working-directory: browser-check

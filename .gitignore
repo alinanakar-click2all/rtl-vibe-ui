@@ -1,5 +1,6 @@
-# Generated demo preview
+# Generated demo preview and one-time promotion candidate
 /demo-upgraded-preview.html
+/demo-official-candidate.html
 
 # Browser test dependencies and generated results
 /browser-check/node_modules/

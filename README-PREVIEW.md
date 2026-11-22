@@ -1,34 +1,23 @@
-# RTL Vibe UI — Demo Preview Upgrade (draft)
+# RTL Vibe UI — demo preview (legacy migration reference)
 
-This is a **non-destructive preview**, not a release-ready replacement. The original `demo.html` stays unchanged. The builder reads that file and creates `demo-upgraded-preview.html` for side-by-side comparison. No third-party dependencies are required.
+The old `scripts/build-demo-preview.mjs` creates a comparison preview **only from the original, unenhanced** `demo.html`. It is intentionally fail-closed and is retained, with its unit tests, as a regression fixture for the one-time promotion. **Do not run it against the promoted official `demo.html`**; it will refuse the already-enhanced markup.
 
-## Install into the repository root
+## Official demo workflow
 
-Extract the ZIP into `D:\Ai\rtl-vibe-ui` so these new files appear:
+`demo.html` is now the intended public demo. It loads shared production demo assets from:
 
-- `scripts/build-demo-preview.mjs`
 - `assets/demo-enhancements.css`
 - `assets/demo-enhancements.js`
-- `tests/demo-preview-build.test.mjs`
 
-## Run
+To promote an unmodified original checkout, see [README-DEMO-PROMOTION.md](README-DEMO-PROMOTION.md). After promotion:
 
 ```bash
-node --test tests/demo-preview-build.test.mjs
-node scripts/build-demo-preview.mjs
+node scripts/promote-demo.mjs --check
+npm --prefix browser-check test
 ```
 
-Open both `demo.html` and `demo-upgraded-preview.html` in your browser and compare mobile/desktop, RTL/LTR, Light/Dark. On mobile, use the menu button in the top bar. Try Tab / Shift+Tab / Escape in Modal and Drawer; try arrow keys in Tabs. Also test reduced motion.
+To test before promotion, use `node scripts/promote-demo.mjs --prepare` and `DEMO_HTML=candidate npm --prefix browser-check test` in Git Bash.
 
-**Important:** Do not commit generated `demo-upgraded-preview.html`; it is a local comparison artifact. When results are approved, merge tested enhancements into `demo.html` on the existing PR. The preview builder explicitly refuses to modify a source whose structure no longer matches expected markers.
+The existing `tests/demo-preview-build.test.mjs` still tests the old preview transformation on synthetic fixtures; no second, divergent production interface is maintained. Do not track the generated preview or candidate HTML files.
 
-## Scope
-
-- Adds an accessible mobile navigation drawer, preserving desktop sidebar.
-- Prevents keyboard focus from reaching an inactive Drawer.
-- Adds modal/drawer focus containment, Escape and focus return.
-- Adds direction-aware roving tabindex for Tabs.
-- Improves accessibility of Accordion and phone hint.
-- Refines dark theme status text contrast, mobile spacing, focus indicators, and reduced motion.
-
-No backend functionality is implied: buttons and demo flows remain demonstrative.
+Demo actions are illustrative only and do not perform backend operations.

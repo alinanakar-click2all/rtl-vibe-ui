@@ -357,6 +357,8 @@ td code { direction: ltr; unicode-bidi: embed; font-family: var(--font-mono); fo
 .notice code { background: var(--surface-3); padding: 1px 6px; border-radius: 6px; font-family: var(--font-mono); font-size: 12px; direction: ltr; unicode-bidi: embed; }
 .notice ul { margin: 10px 0 0; padding-inline-start: 20px; }
 </style>
+<!-- RTL Vibe UI — official enhanced demo -->
+<link rel="stylesheet" href="assets/demo-enhancements.css" />
 </head>
 <body>
 
@@ -371,9 +373,11 @@ td code { direction: ltr; unicode-bidi: embed; font-family: var(--font-mono); fo
   </div>
 </div>
 
+<div class="mobile-nav-backdrop" id="mobile-nav-backdrop" aria-hidden="true"></div>
 <div class="app">
   <!-- سایدبار -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="mobile-sidebar">
+    <button type="button" class="mobile-nav-close" id="mobile-nav-close" aria-label="بستن منوی موبایل">✕</button>
     <div class="brand">
       <div class="brand-mark">آ</div>
       <div class="brand-name">آرمان<span>پنل مدیریت</span></div>
@@ -412,6 +416,7 @@ td code { direction: ltr; unicode-bidi: embed; font-family: var(--font-mono); fo
   <!-- مین -->
   <main class="main">
     <header class="topbar">
+      <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle" aria-expanded="false" aria-controls="mobile-sidebar" aria-label="باز کردن منوی اصلی">☰</button>
       <label class="search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="search" placeholder="جستجو در سفارش‌ها..." aria-label="جستجو" />
@@ -571,7 +576,7 @@ td code { direction: ltr; unicode-bidi: embed; font-family: var(--font-mono); fo
           <div class="field">
             <label for="f-phone">شماره تلفن</label>
             <input id="f-phone" type="tel" dir="ltr" placeholder="+98 912 000 0000" />
-            <p class="field-error">شماره باید ۱۱ رقم باشد.</p>
+            <p class="field-error" id="phone-hint">شماره باید ۱۱ رقم باشد.</p>
           </div>
         </form>
       </section>
@@ -619,7 +624,7 @@ td code { direction: ltr; unicode-bidi: embed; font-family: var(--font-mono); fo
 
 <!-- ================= Drawer ================= -->
 <div class="drawer-backdrop" id="drawer-backdrop"></div>
-<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true" inert>
   <header class="drawer-header">
     <h2 id="drawer-title">فیلترهای پیشرفته</h2>
     <button class="modal-close" id="close-drawer" aria-label="بستن">
@@ -662,83 +667,7 @@ dirBtn.addEventListener("click", () => {
   dirBtn.textContent = root.dir.toUpperCase();
 });
 
-/* Modal */
-const modal = document.getElementById("modal");
-const openModalBtn = document.getElementById("open-modal");
-const closeModalBtn = document.getElementById("close-modal");
-const cancelModalBtn = document.getElementById("cancel-modal");
-const confirmModalBtn = document.getElementById("confirm-modal");
-let lastFocusedModal = null;
-
-function showModal() {
-  lastFocusedModal = document.activeElement;
-  modal.hidden = false;
-  const first = modal.querySelector("button, [href], input, select, textarea");
-  first?.focus();
-}
-function hideModal() {
-  modal.hidden = true;
-  lastFocusedModal?.focus();
-}
-openModalBtn.addEventListener("click", showModal);
-closeModalBtn.addEventListener("click", hideModal);
-cancelModalBtn.addEventListener("click", hideModal);
-confirmModalBtn.addEventListener("click", () => {
-  hideModal();
-  showToast("محصول با موفقیت افزوده شد", "success");
-});
-modal.addEventListener("click", (e) => { if (e.target === modal) hideModal(); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modal.hidden) hideModal(); });
-
-/* Drawer (بدون باگ) */
-const drawer = document.getElementById("drawer");
-const drawerBackdrop = document.getElementById("drawer-backdrop");
-const openDrawerBtn = document.getElementById("open-drawer");
-const closeDrawerBtn = document.getElementById("close-drawer");
-let lastFocusedDrawer = null;
-
-function showDrawer() {
-  lastFocusedDrawer = document.activeElement;
-  drawer.classList.add("open");
-  drawerBackdrop.classList.add("open");
-  const first = drawer.querySelector("button, [href], input, select, textarea");
-  first?.focus();
-}
-function hideDrawer() {
-  drawer.classList.remove("open");
-  drawerBackdrop.classList.remove("open");
-  lastFocusedDrawer?.focus();
-}
-openDrawerBtn.addEventListener("click", showDrawer);
-closeDrawerBtn.addEventListener("click", hideDrawer);
-drawerBackdrop.addEventListener("click", hideDrawer);
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && drawer.classList.contains("open")) hideDrawer(); });
-
-/* Tabs */
-const tabs = document.querySelectorAll('.tab');
-tabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    tabs.forEach((t) => {
-      t.setAttribute("aria-selected", "false");
-      const panel = document.getElementById(t.getAttribute("aria-controls"));
-      if (panel) panel.hidden = true;
-    });
-    tab.setAttribute("aria-selected", "true");
-    const panel = document.getElementById(tab.getAttribute("aria-controls"));
-    if (panel) panel.hidden = false;
-  });
-});
-
-/* Accordion */
-document.querySelectorAll(".accordion-trigger").forEach((trigger) => {
-  trigger.addEventListener("click", () => {
-    const expanded = trigger.getAttribute("aria-expanded") === "true";
-    trigger.setAttribute("aria-expanded", String(!expanded));
-    const panel = document.getElementById(trigger.getAttribute("aria-controls"));
-    if (panel) panel.classList.toggle("open", !expanded);
-  });
-});
-
+/* Modal, Drawer, Tabs, Accordion: handled by assets/demo-enhancements.js. */
 /* Toast */
 const toastContainer = document.getElementById("toast-container");
 function showToast(message, variant = "accent") {
@@ -755,5 +684,6 @@ document.getElementById("show-toast-accent").addEventListener("click", () => sho
 document.getElementById("show-toast-success").addEventListener("click", () => showToast("سفارش با موفقیت ثبت شد", "success"));
 </script>
 
+<script src="assets/demo-enhancements.js"></script>
 </body>
 </html>
