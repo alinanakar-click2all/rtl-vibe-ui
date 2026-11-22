@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compliant-blue)](https://agentskills.io)
-[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2%20AA-green)](https://www.w3.org/TR/WCAG22/)
+[![WCAG 2.2 AA target](https://img.shields.io/badge/WCAG%202.2%20AA-target-blue)](https://www.w3.org/TR/WCAG22/)
 
 ---
 

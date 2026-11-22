@@ -10,7 +10,7 @@ license: MIT
 compatibility: >-
   Framework-agnostic HTML/CSS guidance; use Tailwind utility examples only in
   projects with the corresponding Tailwind version. The optional repository-level
-  audit script currently needs Node.js 22.2+ and is not a trusted CI quality gate.
+  audit script needs Node.js 22.2+; its CI check provides limited static diagnostics.
 metadata:
   author: "علی نعناکار"
   version: "1.0.1-draft"
