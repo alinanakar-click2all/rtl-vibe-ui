@@ -5,23 +5,34 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
       - name: Install skills-ref
-        run: pip install --quiet skills-ref
+        run: python -m pip install --quiet skills-ref
 
       - name: Validate skill structure
         run: agentskills validate ./skills/rtl-vibe-ui
 
-      - name: Verify all reference files exist
+      - name: Verify reference files
         run: |
           for f in 01-foundations 02-typography 03-color-and-tokens \
                    04-components 05-motion 06-accessibility 07-checklist; do
@@ -29,11 +40,69 @@ jobs:
           done
           echo "All reference files present."
 
-      - name: Check frontmatter version matches CHANGELOG
+      - name: Verify skill version
         run: |
           VERSION=$(grep -oP 'version: "\K[^"]+' skills/rtl-vibe-ui/SKILL.md | head -1)
-          grep -q "## \[$VERSION\]" CHANGELOG.md || exit 1
+          grep -Fq "## [$VERSION]" CHANGELOG.md
           echo "Version $VERSION found in CHANGELOG."
 
-      - name: RTL audit
+      - name: Run RTL audit tests
+        run: node --test tests/audit-rtl.test.mjs
+
+      - name: Run RTL audit
         run: node scripts/audit-rtl.mjs skills/rtl-vibe-ui/assets --check
+
+  demo-browser:
+    name: Official demo browser tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: browser-check/package-lock.json
+
+      - name: Test legacy preview and official demo promotion
+        run: node --test tests/demo-preview-build.test.mjs tests/promote-demo.test.mjs tests/build-visual-preview.test.mjs tests/promote-visual.test.mjs tests/build-mobile-table-trial.test.mjs tests/promote-mobile-table.test.mjs
+
+      - name: Verify official demo structure and linked assets
+        run: node scripts/promote-demo.mjs --check
+
+      - name: Verify official visual dashboard assets
+        run: node scripts/promote-visual.mjs --check
+
+      - name: Verify official responsive orders table
+        run: node scripts/promote-mobile-table.mjs --check
+
+      - name: Install browser test dependencies
+        working-directory: browser-check
+        run: npm ci
+
+      - name: Compile and verify Tailwind CSS v4 tokens
+        run: node browser-check/check-tailwind-v4.mjs
+
+      - name: Install Playwright Chromium and system dependencies
+        working-directory: browser-check
+        run: npx playwright install --with-deps chromium
+
+      - name: Test official demo, analytics and mobile orders table in Chromium
+        working-directory: browser-check
+        run: npm test
+
+      - name: Upload browser failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-browser-failure-report
+          path: |
+            browser-check/playwright-report/
+            browser-check/test-results/
+            browser-check/artifacts/
+          if-no-files-found: warn
+          retention-days: 7

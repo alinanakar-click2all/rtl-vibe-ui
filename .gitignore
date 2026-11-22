@@ -1,0 +1,18 @@
+# Generated demo preview and one-time promotion candidate
+/demo-upgraded-preview.html
+/demo-official-candidate.html
+
+# Browser test dependencies and generated results
+/browser-check/node_modules/
+/browser-check/artifacts/
+/browser-check/playwright-report/
+/browser-check/test-results/
+
+# Visual trial candidate (generated, not committed)
+/demo-visual-candidate.html
+
+# Trial-only browser report (not tracked)
+/browser-check/playwright-report-visual/
+
+# Local, trial-only Playwright report
+/browser-check/playwright-report-table-trial/

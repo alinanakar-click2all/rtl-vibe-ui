@@ -9,11 +9,22 @@ Fixed، Security.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-22
+
 ### Added
 - فایل `references/03-color-and-tokens.md` با فلسفه پالت بومی ایرانی-اسلامی
 - اسکریپت `scripts/audit-rtl.mjs` برای بررسی خودکار ویژگی‌های فیزیکی
+- آزمون‌های خودکار Node.js و Playwright برای دموی رسمی.
+- نمودار تحلیلی فروش با داده‌های نمونه و انتخاب بازه زمانی.
+- قابلیت پیمایش افقی دسترس‌پذیر برای جدول سفارش‌ها در موبایل.
+- آزمون کامپایل Tailwind CSS v4 در CI با ۱۰ بررسی منتخب.
 
 ### Changed
+- بازسازی فایل اصلی `SKILL.md` و تعریف گردش‌کار ساخت و بررسی RTL.
+- اصلاح آدرس مخزن در Metadata.
+- بهبود قواعد زبان، جهت، تایپوگرافی، کامپوننت‌ها و دسترس‌پذیری.
+- شفاف‌سازی وضعیت اسکریپت Audit و محدودیت‌های تست.
+- شفاف‌سازی نشان WCAG به‌عنوان هدف ارزیابی، نه گواهی انطباق.
 - frontmatter `SKILL.md` به مشخصات Agent Skills (شش فیلد، `metadata.version`)
 - `assets/tailwind-tokens.css` به `@theme inline` و `@custom-variant dark`
 - `references/05-motion.md` با بخش «معنای علامت `--flow-dir`»
@@ -21,6 +32,7 @@ Fixed، Security.
 
 ### Fixed
 - جهت `var(--flow-dir)` در `demo.html` که باعث نمایش Drawer در حالت بسته می‌شد
+- شکست نامناسب شناسه، مبلغ و وضعیت سفارش‌ها در نمایشگرهای کوچک.
 
 ## [1.0.0] - 2026-11-18
 
@@ -35,5 +47,6 @@ Fixed، Security.
 - `assets/tailwind-tokens.css` — توکن‌های معنایی Tailwind v4
 - نمونه دموی `demo.html` با حالت تاریک و جابه‌جایی RTL/LTR
 
-[Unreleased]: https://github.com/alinanakar/rtl-vibe-ui/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/alinanakar/rtl-vibe-ui/releases/tag/v1.0.0
+[Unreleased]: https://github.com/alinanakar-click2all/rtl-vibe-ui/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/alinanakar-click2all/rtl-vibe-ui/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/alinanakar-click2all/rtl-vibe-ui/releases/tag/v1.0.0

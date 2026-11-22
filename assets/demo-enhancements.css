@@ -1,0 +1,93 @@
+/* RTL Vibe UI — Demo enhancement preview. Preserves the Arman palette and layout. */
+:root {
+  --ui-focus: var(--primary);
+  --ui-ease: cubic-bezier(.22, 1, .36, 1);
+}
+[data-theme="dark"] {
+  --primary: #8298ff;
+  --on-primary: #0b1220;
+  --primary-soft: rgba(130, 152, 255, .15);
+  --accent: #61d0c6;
+  --danger: #f77d86;
+  --warn: #fbbf72;
+  --ui-focus: #b8c6ff;
+}
+:focus-visible { outline: 3px solid var(--ui-focus); outline-offset: 3px; }
+[hidden], .accordion-panel[hidden] { display: none !important; }
+:is(.btn, .icon-btn, .tab, .nav-item, .accordion-trigger, .page-list button) {
+  -webkit-tap-highlight-color: transparent;
+}
+.btn, .icon-btn, .tab, .nav-item, .accordion-trigger { transition-timing-function: var(--ui-ease); }
+.btn-primary:hover { background: var(--lajvard-700); color: #fff; }
+[data-theme="dark"] .btn-primary:hover { background: #a3b5ff; border-color: #a3b5ff; color: #0b1220; }
+.field input, .field select, .field textarea, .chat-input input { min-block-size: 44px; font-size: max(14px, 1rem); }
+.field label, .stat-label { font-size: 13px; }
+.field-error { color: var(--on-surface-muted); }
+.stat-value { font-size: clamp(1.4rem, 2vw, 1.8rem); font-variant-numeric: tabular-nums; }
+.card { transition: box-shadow .22s var(--ui-ease), border-color .22s var(--ui-ease); }
+.stats > .card:hover { border-color: color-mix(in srgb, var(--primary) 22%, var(--border)); box-shadow: var(--shadow-md); }
+.table-wrap { scrollbar-width: thin; }
+.tab[aria-selected="true"] { font-weight: 800; }
+.tab-panel { min-block-size: 38px; }
+.toast-container { max-inline-size: calc(100vw - 24px); }
+.toast { max-inline-size: min(340px, calc(100vw - 24px)); }
+.modal-backdrop { padding-block: 16px; }
+.modal { max-block-size: calc(100dvh - 32px); overflow-y: auto; }
+.drawer[inert] { pointer-events: none; }
+body.has-overlay { overflow: hidden; }
+.mobile-nav-toggle, .mobile-nav-close, .mobile-nav-backdrop { display: none; }
+.mobile-nav-toggle, .mobile-nav-close {
+  inline-size: 44px; block-size: 44px; border: 1px solid var(--border);
+  border-radius: 12px; place-items: center; color: var(--on-surface);
+  background: var(--surface-2); flex: none;
+}
+.mobile-nav-toggle:hover, .mobile-nav-close:hover { background: var(--surface-3); }
+.mobile-nav-close { margin-inline-start: auto; margin-block-end: -8px; }
+@media (max-width: 900px) {
+  .mobile-nav-toggle { display: grid; }
+  .app .sidebar { display: none; }
+  .app.mobile-nav-open .sidebar {
+    position: fixed; inset-block: 0; inset-inline-start: 0; z-index: 92;
+    display: flex; inline-size: min(310px, 85vw); block-size: 100dvh;
+    padding-block: 18px; overflow-y: auto; box-shadow: var(--shadow-lg);
+    animation: ui-mobile-nav-in .2s var(--ui-ease) both;
+  }
+  .app.mobile-nav-open .mobile-nav-close { display: grid; }
+  .mobile-nav-backdrop.open {
+    display: block; position: fixed; inset: 0; z-index: 91;
+    background: rgba(8, 16, 37, .56);
+  }
+  .topbar { position: relative; inset-block-start: auto; padding-inline: 16px; gap: 10px; }
+  .content { padding-inline: clamp(14px, 3.5vw, 28px); padding-block: 18px; }
+  .page-head { align-items: flex-start; }
+  .page-head > div:last-child { flex-wrap: wrap; }
+  .demo-bar { flex-wrap: wrap; gap: 8px; padding-inline: 12px; }
+  .demo-bar .actions { gap: 6px; }
+}
+@media (max-width: 580px) {
+  .demo-bar > span { display: none; }
+  .topbar { gap: 8px; }
+  .search { min-inline-size: 0; }
+  .topbar-actions { gap: 5px; }
+  .topbar-actions .icon-btn { inline-size: 38px; block-size: 38px; }
+  .page-head h1 { font-size: clamp(1.2rem, 5vw, 1.5rem); }
+  .card { padding: 16px; }
+  /* Avoid intrinsic min-content widths from widening the 320px RTL viewport.
+     Let grid cards and the chat composer shrink without clipping the page. */
+  .card, .chat-input, .chat-input input { min-inline-size: 0; }
+  .chat-input input { max-inline-size: 100%; }
+  .table-wrap { margin-inline: -4px; }
+  .form-actions { flex-wrap: wrap; }
+}
+@keyframes ui-mobile-nav-in {
+  from { opacity: .85; translate: calc(var(--flow-dir) * -14px) 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app.mobile-nav-open .sidebar { animation: none; }
+  .card, .btn, .icon-btn, .tab, .nav-item { transition: none; }
+}
+@media (forced-colors: active) {
+  :focus-visible { outline-color: Highlight; }
+  .tab[aria-selected="true"], .nav-item.active { outline: 1px solid Highlight; }
+}
