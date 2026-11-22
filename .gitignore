@@ -1,0 +1,8 @@
+# Generated demo preview
+/demo-upgraded-preview.html
+
+# Browser test dependencies and generated results
+/browser-check/node_modules/
+/browser-check/artifacts/
+/browser-check/playwright-report/
+/browser-check/test-results/

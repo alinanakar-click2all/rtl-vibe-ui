@@ -1,0 +1,13 @@
+{
+  "name": "rtl-vibe-ui-browser-check",
+  "private": true,
+  "type": "module",
+  "description": "Isolated Chrome interaction smoke tests for the non-destructive RTL Vibe UI demo preview",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1"
+  }
+}
