@@ -9,7 +9,7 @@ Fixed، Security.
 
 ## [Unreleased]
 
-## [1.0.1-draft] - 2026-11-22
+## [1.0.1] - 2026-11-22
 
 ### Added
 - فایل `references/03-color-and-tokens.md` با فلسفه پالت بومی ایرانی-اسلامی
@@ -47,5 +47,6 @@ Fixed، Security.
 - `assets/tailwind-tokens.css` — توکن‌های معنایی Tailwind v4
 - نمونه دموی `demo.html` با حالت تاریک و جابه‌جایی RTL/LTR
 
-[Unreleased]: https://github.com/alinanakar-click2all/rtl-vibe-ui/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/alinanakar-click2all/rtl-vibe-ui/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/alinanakar-click2all/rtl-vibe-ui/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/alinanakar-click2all/rtl-vibe-ui/releases/tag/v1.0.0

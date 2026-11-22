@@ -13,7 +13,7 @@ compatibility: >-
   audit script needs Node.js 22.2+; its CI check provides limited static diagnostics.
 metadata:
   author: "علی نعناکار"
-  version: "1.0.1-draft"
+  version: "1.0.1"
   repository: "https://github.com/alinanakar-click2all/rtl-vibe-ui"
 ---
 
