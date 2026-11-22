@@ -26,7 +26,14 @@
 
 ```bash
 # با GitHub CLI (≥ 2.90.0)
-gh skill install alinanakar/rtl-vibe-ui rtl-vibe-ui
+gh skill install alinanakar-click2all/rtl-vibe-ui skills/rtl-vibe-ui
 
 # یا با npx skills
-npx skills add alinanakar/rtl-vibe-ui
+npx skills add alinanakar-click2all/rtl-vibe-ui --skill rtl-vibe-ui
+```
+
+## مستندات و پیش‌نمایش
+
+- [راهنمای اصلی اسکیل](skills/rtl-vibe-ui/SKILL.md)
+- [دموی رسمی](demo.html) — داده‌های فروش نمایشی هستند.
+- [راهنمای آزمون‌های مرورگری](browser-check/README-BROWSER-TESTS.md)

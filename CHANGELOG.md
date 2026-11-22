@@ -12,6 +12,9 @@ Fixed، Security.
 ### Added
 - فایل `references/03-color-and-tokens.md` با فلسفه پالت بومی ایرانی-اسلامی
 - اسکریپت `scripts/audit-rtl.mjs` برای بررسی خودکار ویژگی‌های فیزیکی
+- آزمون‌های خودکار Node.js و Playwright برای دموی رسمی.
+- نمودار تحلیلی فروش با داده‌های نمونه و انتخاب بازه زمانی.
+- قابلیت پیمایش افقی دسترس‌پذیر برای جدول سفارش‌ها در موبایل.
 
 ### Changed
 - frontmatter `SKILL.md` به مشخصات Agent Skills (شش فیلد، `metadata.version`)
@@ -21,6 +24,7 @@ Fixed، Security.
 
 ### Fixed
 - جهت `var(--flow-dir)` در `demo.html` که باعث نمایش Drawer در حالت بسته می‌شد
+- شکست نامناسب شناسه، مبلغ و وضعیت سفارش‌ها در نمایشگرهای کوچک.
 
 ## [1.0.1-draft] - 2026-11-22
 
@@ -43,5 +47,5 @@ Fixed، Security.
 - `assets/tailwind-tokens.css` — توکن‌های معنایی Tailwind v4
 - نمونه دموی `demo.html` با حالت تاریک و جابه‌جایی RTL/LTR
 
-[Unreleased]: https://github.com/alinanakar/rtl-vibe-ui/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/alinanakar/rtl-vibe-ui/releases/tag/v1.0.0
+[Unreleased]: https://github.com/alinanakar-click2all/rtl-vibe-ui/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/alinanakar-click2all/rtl-vibe-ui/releases/tag/v1.0.0
