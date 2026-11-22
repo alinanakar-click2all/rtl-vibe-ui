@@ -45,3 +45,23 @@ The former trial-only `tests/visual.manual.mjs` and `playwright.visual.config.mj
 The official `npm test` suite now discovers **18 Playwright tests**: the original 14 plus four tests in `tests/mobile-table.spec.mjs`. These assert a native, scrollable orders table at 320px and 400px without root overflow or broken IDs, a preserved desktop layout and working direction/theme toggles. The local-only `mobile-table.table-trial.mjs` and `playwright.table.config.mjs` are not required for CI.
 
 After the one-time promotion, run `node scripts/promote-mobile-table.mjs --check`. The old trial builder deliberately refuses an already-promoted official demo. See `../README-STAGE66.md`.
+
+## Tailwind CSS v4 token compilation
+
+The browser-check development dependencies include pinned versions of
+Tailwind CSS and its CLI.
+
+After installing dependencies with `npm ci` inside `browser-check`,
+run the smoke test from the repository root:
+
+```bash
+node browser-check/check-tailwind-v4.mjs
+```
+
+The test compiles the official `skills/rtl-vibe-ui/assets/tailwind-tokens.css`
+source into ignored `browser-check/artifacts/` output and verifies
+10 selected generated classes and design-token markers.
+
+GitHub Actions runs this check before Playwright browser installation.
+The check does not certify WCAG contrast, complete visual quality,
+or compatibility with every host framework.

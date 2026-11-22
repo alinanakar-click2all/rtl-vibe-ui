@@ -84,6 +84,9 @@ jobs:
         working-directory: browser-check
         run: npm ci
 
+      - name: Compile and verify Tailwind CSS v4 tokens
+        run: node browser-check/check-tailwind-v4.mjs
+
       - name: Install Playwright Chromium and system dependencies
         working-directory: browser-check
         run: npx playwright install --with-deps chromium
