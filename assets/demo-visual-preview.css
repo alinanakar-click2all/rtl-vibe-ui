@@ -1,0 +1,79 @@
+/* Stage 57 — isolated visual trial for Arman's overview tab.
+   Shared design tokens and original dashboard components are intentionally untouched. */
+.v57-overview {
+  --v57-grid-line: var(--border);
+  display: grid;
+  gap: 18px;
+  min-inline-size: 0;
+  color: var(--on-surface);
+}
+.v57-overview, .v57-overview * { box-sizing: border-box; }
+.v57-overview-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.v57-kicker {
+  margin: 0 0 3px;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+.v57-overview h3, .v57-overview h4 { margin: 0; color: var(--on-surface); line-height: 1.55; }
+.v57-overview h3 { font-size: clamp(16px, 1.4vw, 19px); font-weight: 800; }
+.v57-overview h4 { font-size: 14px; font-weight: 800; }
+.v57-subtitle { margin: 4px 0 0; color: var(--on-surface-muted); font-size: 12px; }
+.v57-period { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 12px; background: var(--surface-3); border: 1px solid var(--border); }
+.v57-period button { padding: 6px 13px; min-block-size: 36px; border: 0; border-radius: 8px; font: inherit; font-size: 12px; font-weight: 700; color: var(--on-surface-muted); background: transparent; }
+.v57-period button[aria-pressed="true"] { color: var(--primary); background: var(--surface-2); box-shadow: var(--shadow-sm); }
+.v57-period button:hover { color: var(--on-surface); }
+.v57-period button:focus-visible, .v57-data-toggle:focus-visible { outline: 3px solid var(--ui-focus, var(--primary)); outline-offset: 3px; }
+.v57-panels { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(230px, 0.8fr); gap: 14px; align-items: stretch; min-inline-size: 0; }
+.v57-chart-card, .v57-side-card { border: 1px solid var(--border); border-radius: 13px; min-inline-size: 0; }
+.v57-chart-card { background: var(--surface-2); padding: 16px; }
+.v57-side-card { background: var(--surface-3); padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.v57-chart-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.v57-chart-label { font-size: 12px; font-weight: 700; color: var(--on-surface); }
+.v57-chart-unit { margin-block-start: 2px; font-size: 11px; color: var(--on-surface-muted); }
+.v57-legend { font-size: 11px; color: var(--on-surface-muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.v57-legend::before { content: ""; inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--primary); }
+.v57-svg { display: block; inline-size: 100%; block-size: 205px; margin-block: 6px 0; overflow: visible; }
+.v57-svg .v57-grid { stroke: var(--v57-grid-line); stroke-width: 1; stroke-dasharray: 4 7; }
+.v57-svg .v57-line { fill: none; stroke: var(--primary); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.v57-svg .v57-dot { fill: var(--surface-2); stroke: var(--primary); stroke-width: 3; vector-effect: non-scaling-stroke; }
+.v57-axis { display: grid; grid-template-columns: repeat(var(--v57-n, 7), minmax(0, 1fr)); margin-block-start: 0; }
+.v57-axis span { text-align: center; font-size: 10px; color: var(--on-surface-muted); min-inline-size: 0; white-space: nowrap; }
+.v57-metric-label { color: var(--on-surface-muted); font-size: 12px; }
+.v57-total { display: block; margin-block: 4px 0; color: var(--on-surface); font-size: clamp(20px, 2vw, 28px); line-height: 1.5; font-weight: 800; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.v57-total-unit { color: var(--on-surface-muted); font-size: 11px; }
+.v57-metric-note { padding-block-end: 13px; border-block-end: 1px solid var(--border); color: var(--on-surface-muted); font-size: 11px; }
+.v57-channel { display: flex; flex-direction: column; gap: 4px; }
+.v57-channel-title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--on-surface); }
+.v57-channel-title strong { font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.v57-track { background: var(--border); block-size: 7px; border-radius: 999px; overflow: hidden; }
+.v57-track span { display: block; block-size: 100%; border-radius: inherit; background: var(--primary); }
+.v57-channel[data-channel="instagram"] .v57-track span { background: var(--accent); }
+.v57-channel[data-channel="other"] .v57-track span { background: var(--success); }
+.v57-demo-label { margin: 0; padding: 8px 11px; border-radius: 9px; color: var(--on-surface-muted); background: var(--surface-3); font-size: 11px; line-height: 1.8; }
+.v57-data-toggle { display: inline-flex; cursor: pointer; color: var(--primary); font-size: 12px; font-weight: 700; padding-block: 4px; }
+.v57-data-table { inline-size: 100%; margin-block-start: 9px; border-collapse: collapse; table-layout: fixed; }
+.v57-data-table th, .v57-data-table td { text-align: start; padding: 8px 10px; font-size: 12px; border-block-end: 1px solid var(--border); }
+.v57-data-table th { color: var(--on-surface-muted); background: var(--surface-3); }
+.v57-data-table td { color: var(--on-surface); }
+.v57-data-table th, .v57-data-table td { overflow-wrap: anywhere; }
+.v57-overview details { min-inline-size: 0; }
+@media (max-width: 1020px) { .v57-panels { grid-template-columns: minmax(0, 1fr); } .v57-side-card { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; } .v57-metric-note { border-block-end: 0; } .v57-side-card h4 { grid-column: 1 / -1; } }
+@media (max-width: 580px) {
+  .v57-overview { gap: 14px; }
+  .v57-panels { gap: 12px; }
+  .v57-chart-card { padding: 12px; }
+  .v57-side-card { display: flex; padding: 14px; }
+  .v57-chart-top { flex-wrap: wrap; }
+  .v57-svg { block-size: 175px; }
+  .v57-axis span { font-size: 9px; }
+  .v57-data-table th, .v57-data-table td { padding-inline: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .v57-overview * { scroll-behavior: auto; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+@media (forced-colors: active) { .v57-track span { background: Highlight; } .v57-svg .v57-line, .v57-svg .v57-dot { stroke: Highlight; } }

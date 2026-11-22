@@ -33,3 +33,9 @@ The suite checks external CSS and JS loading, direction/theme controls, keyboard
 Screenshots: `browser-check/artifacts/`; failed-test traces and screenshots: `browser-check/test-results/`; HTML report: `cd browser-check && npm run test:report`.
 
 Avoid committing generated output, `node_modules/`, screenshots, or reports. Their locations are excluded by `.gitignore`.
+
+## Stage 60: official sales-overview analytics
+
+After promoting the approved visualization via `node scripts/promote-visual.mjs --apply`, the normal `npm test` discovers **14 tests**: the original eight interaction tests and six tests in `tests/visual.spec.mjs`. The latter verify the sample SVG, seven-/thirty-day updates, keyboard activation, RTL/LTR and themes, and 1440px/400px/320px root overflow.
+
+The former trial-only `tests/visual.manual.mjs` and `playwright.visual.config.mjs` can be removed after successful official tests. They must not be committed as part of the official suite. See `../README-STAGE60.md`.

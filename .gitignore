@@ -7,3 +7,9 @@
 /browser-check/artifacts/
 /browser-check/playwright-report/
 /browser-check/test-results/
+
+# Visual trial candidate (generated, not committed)
+/demo-visual-candidate.html
+
+# Trial-only browser report (not tracked)
+/browser-check/playwright-report-visual/
