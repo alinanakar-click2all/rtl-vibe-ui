@@ -14,7 +14,8 @@ export default defineConfig({
   ],
   use: {
     browserName: 'chromium',
-    channel: 'chrome', // Use Chrome already installed on Windows; no browser download.
+    // Local Windows: installed Google Chrome. GitHub CI: Playwright-managed Chromium.
+    channel: process.env.CI ? undefined : 'chrome',
     headless: true,
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',

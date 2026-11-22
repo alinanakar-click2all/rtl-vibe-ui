@@ -51,3 +51,49 @@ jobs:
 
       - name: Run RTL audit
         run: node scripts/audit-rtl.mjs skills/rtl-vibe-ui/assets --check
+
+  demo-browser:
+    name: Demo preview and browser tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: browser-check/package-lock.json
+
+      - name: Test non-destructive demo preview builder
+        run: node --test tests/demo-preview-build.test.mjs
+
+      - name: Build demo preview
+        run: node scripts/build-demo-preview.mjs
+
+      - name: Install browser test dependencies
+        working-directory: browser-check
+        run: npm ci
+
+      - name: Install Playwright Chromium and system dependencies
+        working-directory: browser-check
+        run: npx playwright install --with-deps chromium
+
+      - name: Test demo interactions in Chromium
+        working-directory: browser-check
+        run: npm test
+
+      - name: Upload browser failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-browser-failure-report
+          path: |
+            browser-check/playwright-report/
+            browser-check/test-results/
+            browser-check/artifacts/
+          if-no-files-found: warn
+          retention-days: 7
